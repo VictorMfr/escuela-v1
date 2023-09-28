@@ -25,6 +25,8 @@ const Home = () => {
     getUsers();
   }, []);
 
+  console.log()
+
   const _addPeriod = async () => {
     const { value: data } = await Swal.fire({
       title: "Ingrese el periodo escolar:",
@@ -140,6 +142,7 @@ const Home = () => {
             (userType === "director") && (
               <>
                 <Widget type="user" amount={users.length ?? 0} />
+                
               </>
             )
           }

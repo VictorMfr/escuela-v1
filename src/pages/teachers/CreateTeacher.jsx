@@ -45,10 +45,7 @@ const CreateTeacher = ({ inputs, title }) => {
                 <label htmlFor="email">Email</label>
                 <input type="email" {...register("email")} placeholder="..." required />
               </div>
-              <div className="formInput">
-                <label htmlFor="section">Sección</label>
-                <input type="text" {...register("section")} placeholder="..." />
-              </div>
+              
 
               <div className="formInput">
                 <label htmlFor="password">Contraseña</label>

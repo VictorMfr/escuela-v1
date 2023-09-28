@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     } else if (typeof err.data == "string") {   
       errorMessages = [err];
     } else {
-      errorMessages = [err.response.data.error]
+      errorMessages = ["error al iniciar sesion"]
     }
     setErrors(errorMessages)
   };  

@@ -83,10 +83,6 @@ const CreateStudent = () => {
                 <input type="text" required {...register('edad')} placeholder="..." />
               </div>
               <div className="formInput">
-                <label htmlFor="seccion">Sección</label>
-                <input type="text" required {...register('seccion')} placeholder="..." />
-              </div>
-              <div className="formInput">
                 <label htmlFor="direccion">Dirección</label>
                 <input type="text" required {...register('direccion')} placeholder="..." />
               </div>

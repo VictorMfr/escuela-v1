@@ -12,9 +12,9 @@ const Widget = ({ type, amount, onclick }) => {
   switch (type) {
     case "user":
       data = {
-        title: "ADMINISTRADORES",
+        title: "ADMINISTRADORES:",
         amount: amount,
-        link: 'Ver administradores',
+        link: '',
         icon: (
           <PeopleIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
         )
@@ -22,9 +22,9 @@ const Widget = ({ type, amount, onclick }) => {
       break;
     case "teacher":
       data = {
-        title: "PROFESORES",
+        title: "PROFESORES:",
         amount: amount,
-        link: 'Ver profesores',
+        link: '',
         icon: (
           <AssignmentIndIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
         )
@@ -32,9 +32,9 @@ const Widget = ({ type, amount, onclick }) => {
       break;
     case "student":
       data = {
-        title: "ESTUDIANTES",
+        title: "ESTUDIANTES:",
         amount: amount,
-        link: 'Ver estudiantes',
+        link: '',
         icon: (
           <SchoolIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
         )
@@ -91,7 +91,7 @@ const Widget = ({ type, amount, onclick }) => {
         onClick: onclick,
         link: 'Cargar',
         icon: (
-          <AutoModeOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
+          <AutoModeOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff"}} />
         )
       }
       break;
@@ -107,10 +107,6 @@ const Widget = ({ type, amount, onclick }) => {
         <span className="link" onClick={onclick}>{data.link}</span>
       </div>
       <div className="right">
-        {/* <div className="percentage positive">
-          <KeyboardArrowUpOutlinedIcon />
-          20%
-        </div> */}
         {data.icon}
       </div>
     </div>

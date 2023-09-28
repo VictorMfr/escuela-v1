@@ -79,9 +79,18 @@ const Sidebar = () => {
                     <span>Estudiantes</span>
                   </li>
                 </Link>
-                <p className="title">CONFIGURACION</p>
 
-                <hr />
+                {
+                  (userType === "director") && (
+                    <Link to="/users" style={{ textDecoration: "none" }}>
+                      <li>
+                        <PeopleIcon className="icon" />
+                        <span>Administradores</span>
+                      </li>
+                    </Link>
+                  )
+                }
+
                 {/* <Link to="/personal" style={{ textDecoration: "none" }}>
                   <li>
                     <FolderSharedIcon className="icon" />
@@ -97,17 +106,8 @@ const Sidebar = () => {
               </>
             )
           }
-
-          {
-            (userType === "director") && (
-              <Link to="/users" style={{ textDecoration: "none" }}>
-                <li>
-                  <PeopleIcon className="icon" />
-                  <span>Administradores</span>
-                </li>
-              </Link>
-            )
-          }
+          <p className="title">CONFIGURACION</p>
+          <hr />
         </ul>
       </div>
       <div className="bottom">
