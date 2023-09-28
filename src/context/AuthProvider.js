@@ -20,15 +20,16 @@ export const AuthProvider = ({ children }) => {
   const userType = user && Object.keys(user)[0] // Obtener el tipo de usuario
 
   const handleError = (err) => {
+
     let errorMessages = []
     if (Array.isArray(err.data)) {
       errorMessages = err.data
-    } else if (err.data.message) {
+    } else if (err.data && err.data.message) {
       errorMessages = [err.data.message]
     } else if (typeof err.data == "string") {   
       errorMessages = [err];
     } else {
-      errorMessages = ["Credenciales no válidas. Intente nuevamente."]
+      errorMessages = [err.response.data.error]
     }
     setErrors(errorMessages)
   };  
@@ -60,7 +61,7 @@ export const AuthProvider = ({ children }) => {
         setUser(res.data)
         sessionStorage.setItem("session", JSON.stringify(res.data))
       } else {
-        console.log(res.data.message)
+        console.log(res.error)
       }
     } catch (error) {
       // console.log(error.response)
