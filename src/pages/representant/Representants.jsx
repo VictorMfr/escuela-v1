@@ -24,7 +24,7 @@ const Representant = () => {
       field: 'hijos_estudiantes', headerName: 'Estudiantes', width: 220,
       renderCell: (params) => {
         if (params.value.length > 0) {
-          return <ol style={{ padding: 0, }}>{params.value.map((e) => (<li key={e._id}><b>{e.hijo_estudiante.nombres} {e.hijo_estudiante.apellidos}</b></li>))}</ol>
+          return <div style={{ padding: 0, }}>{params.value.map((e) => (<p key={e._id}><b>{e.hijo_estudiante.nombres} {e.hijo_estudiante.apellidos}</b></p>))}</div>
         } else {
           return <b>-Sin registros-</b>
         }
@@ -91,9 +91,9 @@ const Representant = () => {
   }, [])
 
   return (
-    <div className='list'>
+    <div className='list' style={{display: "flex"}}>
       <Sidebar />
-      <div className="listContainer">
+      <div className="listContainer" style={{ width: "100%" }}>
         <Navbar />
         <DataTable
           title="Representantes"

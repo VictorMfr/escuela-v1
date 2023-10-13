@@ -1,12 +1,11 @@
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import { Autocomplete, Button, InputLabel, TextField, Tooltip } from "@mui/material";
+import { Autocomplete, Button, InputLabel, TextField, Tooltip, Select, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { esES } from '@mui/x-data-grid/locales/esES';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import Swal from "sweetalert2";
-import { v4 as uuidv4 } from 'uuid';
 import { useDirectors } from "../../context/DirectorContext";
 import { useNavigate } from "react-router-dom";
 import { useStudents } from '../../context/StudentsContext'
@@ -114,64 +113,67 @@ export const RegisterStudents = () => {
   }, [])
 
   return (
-    <div className="list">
+    <div className="list" style={{ display: "flex" }}>
       <Sidebar />
-      <div className="listContainer">
+      <div className="listContainer" style={{ width: "100%" }}>
         <Navbar />
-        <div className="listContainer">
-          <div className="widgets">
-            <div className="widget">
-              <div className="left">
-                <span className="title">SELECCIONE ESTUDIANTE</span>
-                <InputLabel id="demo-select-small-label">Age</InputLabel>
-                <Autocomplete
-                  disablePortal
-                  id="student"
-                  options={students}
-                  onChange={(e, value) => setSelected(value)}
-                  sx={{ width: 300 }}
-                  renderInput={(params) => (<TextField {...params} label="Estudiante" />)}
-                />
-                <span className="link" onClick={addRow}>
-                  Agregar.
-                </span>
-              </div>
-              <div className="right">
-              </div>
+        <br /><br />
+        <div className="listContainer" >
+          <div className="widgets" style={{ display: "flex", gap: 5, justifyContent: "center" }}>
+            <div className="left">
+              <span className="title">SELECCIONE ESTUDIANTE</span>
+              <Autocomplete
+                disablePortal
+                id="student"
+                options={students}
+                onChange={(e, value) => setSelected(value)}
+                sx={{ width: 300 }}
+                renderInput={(params) => {
+                  return <TextField {...params} label="Estudiante" variant="filled" size="small" />
+                }}
+              />
             </div>
-            <div className="widget">
-              <div className="right">
-                <span className="title">INDIQUE EL GRADO</span>
-                <TextField
-                  type="number"
-                  step="1"
-                  min="1"
-                  id="grade"
-                  label="Ingrese el grado"
-                  variant="filled"
-                  required
-                  size="small"
-                />
-              </div>
-              <div className="right">
-                <span className="title">INDIQUE LA SECCION</span>
-                <TextField
-                  type="number"
-                  step="1"
-                  min="1"
-                  id="section"
-                  label="Ingrese el grado"
-                  variant="filled"
-                  required
-                  size="small"
-                />
-              </div>
+            <div>
+              <p className="title">INDIQUE EL GRADO</p>
+              <TextField
+                type="number"
+                step="1"
+                min="1"
+                id="grade"
+                label="Ingrese el grado"
+                variant="filled"
+                required
+                size="small"
+              />
             </div>
+
+            <div>
+              <p className="title">INDIQUE LA SECCION</p>
+              <TextField
+                type="String"
+                step="1"
+                min="1"
+                id="section"
+                label="Ingrese la sección (Ej. 'a' o 'A')"
+                variant="filled"
+                required
+                size="small"
+              />
+            </div>
+
+
+
           </div>
         </div>
+        <div style={{ display: "flex", justifyContent: "center" }} >
+          <button style={{ backgroundColor: "rebeccapurple", padding: 10, outline: "none", border: "none", color: "white", marginTop: 21 }} onClick={addRow}>
+            Agregar a la lista
+          </button>
+        </div>
+
         <div className="datatable">
-          <div className="datatableTitle">
-            Estudiantes a Procesar
+          <div className="datatableTitle" style={{ display: "flex", justifyContent: "space-around" }}>
+            <p>Estudiantes a Procesar</p>
             <Button variant="outlined" onClick={saveGrades}>
               Guardar
             </Button>

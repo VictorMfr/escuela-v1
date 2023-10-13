@@ -1,20 +1,77 @@
-import Sidebar from "../../components/sidebar/Sidebar";
-import Navbar from "../../components/navbar/Navbar";
-import { Button, TextField, Tooltip } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { esES } from '@mui/x-data-grid/locales/esES';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { Tooltip, Button, Select, MenuItem } from "@mui/material";
 import Swal from "sweetalert2";
 import { v4 as uuidv4 } from 'uuid';
 import { useDirectors } from "../../context/DirectorContext";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "../../components/sidebar/Sidebar";
+import Navbar from "../../components/navbar/Navbar";
 
 export const RegisterGrades = () => {
-
   const navigate = useNavigate();
-  const [tableRows, setTableRows] = useState([])
   const { addGrades } = useDirectors();
+
+  const [tableRows, setTableRows] = useState([]);
+  const [gradeSelect, setGradeSelect] = useState("1");
+
+  const changeGradeSelectHandler = (event) => {
+    setGradeSelect(event.target.value);
+  }
+
+  const addRow = () => {
+    const gradeValue = gradeSelect;
+    const found = tableRows.find((e) => e.grado === gradeValue);
+
+    if (found) {
+      Swal.fire("Atención", "El valor ya se encuentra registrado", "warning")
+        .then(() => {
+          // Handle duplicates
+        });
+    } else {
+      const row = {
+        id: uuidv4(),
+        grado: gradeValue
+      };
+
+      const newTable = [...tableRows, row];
+      setTableRows(newTable);
+    }
+  };
+
+  const deleteRow = (id) => {
+    const newTable = tableRows.filter((e) => e.id !== id);
+    setTableRows(newTable);
+  }
+
+  const saveGrades = async () => {
+    const grados = tableRows.map((row) => ({ grado: parseInt(row.grado) }));
+
+    if (grados.length === 0) {
+      Swal.fire("Atención", "Ingrese al menos 1 grado a procesar", "warning")
+        .then(() => {
+          // Handle missing grades
+        });
+    } else {
+      Swal.fire({
+        title: 'Confirmar.',
+        text: "Confirme realizar el proceso.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Procesar'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const resp = await addGrades(grados);
+          Swal.fire(resp.title, resp.text, resp.type).then((res) => {
+            if (res.isConfirmed && resp.type === "success") navigate("/");
+          });
+        }
+      });
+    }
+  }
+
   const tableCols = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "grado", headerName: "Grado", width: 130 },
@@ -39,106 +96,33 @@ export const RegisterGrades = () => {
     },
   ];
 
-  const addRow = () => {
-    const input = document.getElementById("grade")
-    const found = tableRows.find((e) => e.grado === input.value);
-    if (found) {
-      Swal.fire("Atención", "El valor ya se encuentra registrado", "warning")
-        .then(() => {
-          input.focus();
-        })
-        return;
-    }
-
-    const row = {
-      id: uuidv4(),
-      grado: input.value
-    }
-    const newTable = tableRows.concat(row);
-    setTableRows(newTable)
-    input.value = "";
-    input.focus();
-  };
-
-  const deleteRow = (id) => {
-    const newTable = tableRows.filter((e) => {
-      return e.id !== id;
-    })
-    setTableRows(newTable);
-  }
-
-  const saveGrades = async () => {
-    const grados = tableRows.map((row) => ({ grado: parseInt(row.grado) }))
-    const lapse = document.getElementById("lapse")
-    console.log(lapse.value, grados)
-    if (lapse.value == "") {
-      Swal.fire("Atención", "Indique el lapso a registrar", "warning")
-        .then(() => {
-          lapse.focus();
-        })
-    } else if (grados.length <= 0) {
-      Swal.fire("Atención", "Ingrese al menos 1 grado a procesasr", "warning")
-        .then(() => {
-          document.getElementById("grade").focus()
-        })
-    } else {
-      Swal.fire({
-        title: 'Confirmar.',
-        text: "Confirme realizar el proceso.",
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Procesar'
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          const resp = await addGrades(lapse.value, grados);
-          Swal.fire(resp.title, resp.text, resp.type).then((res) => {
-            if(res.isConfirmed && resp.type === "success") navigate("/")
-          });
-        }
-      })
-
-    }
-  }
-
   return (
-    <div className="list">
+    <div className="list" style={{display: "flex"}}>
       <Sidebar />
-      <div className="listContainer">
+      <div className="listContainer" style={{width: "100%"}}>
         <Navbar />
-        <div className="listContainer">
-          <div className="widgets">
-            <div className="widget">
-              <div className="left">
-                <span className="title">AGREGAR GRADO</span>
-                <TextField
-                  type="number"
-                  step="1"
-                  min="1"
-                  id="grade"
-                  label="Ingrese el grado"
-                  variant="filled"
-                  required
-                  size="small"
-                />
-                <span className="link" onClick={addRow}>
-                  Agregar.
-                </span>
-              </div>
-              <div className="right">
-                <span className="title">INDIQUE EL LAPSO</span>
-                <TextField
-                  type="number"
-                  step="1"
-                  min="1"
-                  id="lapse"
-                  label="Ingrese el lapso"
-                  variant="filled"
-                  required
-                  size="small"
-                />
-              </div>
-            </div>
-          </div>
+        <div className="gradeSelect">
+          <span className="title">AGREGAR GRADO</span>
+          <Select
+            labelId="grade-label"
+            id="grade-label"
+            value={gradeSelect}
+            onChange={changeGradeSelectHandler}
+            required
+            size="small"
+            variant="filled"
+          >
+            <MenuItem value={"1"}>Primer Grado</MenuItem>
+            <MenuItem value={"2"}>Segundo Grado</MenuItem>
+            <MenuItem value={"3"}>Tercer Grado</MenuItem>
+            <MenuItem value={"4"}>Cuarto Grado</MenuItem>
+            <MenuItem value={"5"}>Quinto Grado</MenuItem>
+            <MenuItem value={"6"}>Sexto Grado</MenuItem>
+          </Select>
+          <br/>
+          <button className="link" onClick={addRow}>
+            Agregar Grado
+          </button>
         </div>
         <div className="datatable">
           <div className="datatableTitle">
@@ -154,7 +138,6 @@ export const RegisterGrades = () => {
             rows={tableRows}
             columns={tableCols.concat(actionColumn)}
             columnVisibilityModel={{
-              // Hide columns status and traderName, the other columns will remain visible
               status: false,
               traderName: false,
               id: false,
@@ -167,7 +150,6 @@ export const RegisterGrades = () => {
             pageSizeOptions={[10, 50, 100]}
             checkboxSelection
             disableRowSelectionOnClick
-          // getRowId={(row) => row._id}
           />
         </div>
       </div>

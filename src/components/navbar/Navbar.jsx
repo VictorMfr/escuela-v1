@@ -1,38 +1,38 @@
 import "./navbar.scss";
-import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import { useContext } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { Tooltip } from "@mui/material";
-import { useAuth } from '../../context/AuthProvider'
+import { useAuth } from '../../context/AuthProvider';
+import Swal from "sweetalert2";
 
 const Navbar = () => {
+  const { logout } = useAuth();
 
-  const { dispatch } = useContext(DarkModeContext)
-  const { logout } = useAuth()
+  // Function to handle the logout confirmation
+  const handleLogout = () => {
+    Swal.fire({
+      title: '¿Cerrar Sesión?',
+      text: '¿Seguro que quieres cerrar la sesión?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Logout the user when confirmed
+        logout();
+      }
+    });
+  };
 
   return (
     <div className='navbar'>
       <div className="wrapper">
-        {/* <div className="search">
-          <input type="text" placeholder="Search..." />
-          <SearchIcon />
-        </div> */}
         <div className="items">
-          {/* <div className="item">
-            <LanguageOutlinedIcon className="icon" />
-            English
-          </div> */}
-          <div className="item" onClick={() => dispatch({ type: "TOGGLE" })}>
-            <Tooltip title="Modo Oscuro / Claro">
-              <DarkModeOutlinedIcon className="icon" />
-            </Tooltip>
-          </div>
           <div className="item">
-            {/* <NotificationsOutlinedIcon className="icon" /> */}
-            {/* <div className="counter">1</div> */}
           </div>
-          <div className="item" onClick={() => logout()}>
+          <div className="item" onClick={handleLogout}>
             <Tooltip title="Cerrar Sesión">
               <LogoutOutlinedIcon className="icon" />
             </Tooltip>
@@ -40,7 +40,7 @@ const Navbar = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

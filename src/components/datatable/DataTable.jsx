@@ -4,12 +4,11 @@ import { esES } from '@mui/x-data-grid/locales/esES';
 import { Link } from "react-router-dom";
 
 const DataTable = ({ title, createUrl, tableCols, tableRows, actionColumn }) => {
-
   return (
     <div className="datatable">
-      <div className="datatableTitle">
+      <div className="datatableTitle" style={{display: "flex", justifyContent:"space-between"}}>
         {title}
-        {createUrl && (<Link to={createUrl} className="link"> Agregar </Link>)}
+        {createUrl && (<Link to={createUrl} className="vlink"> Agregar </Link>)}
       </div>
       <DataGrid
         getRowHeight={() => 'auto'}

@@ -1,5 +1,6 @@
 .datatable {
   padding: 20px;
+  margin: 0 auto;
 
   .datatableTitle {
     width: 100%;
@@ -10,7 +11,7 @@
     align-items: center;
     justify-content: space-between;
 
-    .link {
+    .vlink {
       text-decoration: none;
       color: green;
       font-size: 16px;

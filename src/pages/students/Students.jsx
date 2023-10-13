@@ -19,11 +19,13 @@ const Students = () => {
   const { user, userType } = useAuth();
   const {
     getStudents,
+    getStudentsByTeacher,
     students,
     assignSection,
     removeSection,
     informeDescriptivo,
     rasgosPersonales,
+    calificativoFinal
   } = useStudents();
 
   const tableCols = [
@@ -31,9 +33,9 @@ const Students = () => {
     { field: "cedula_escolar", headerName: "Cédula Escolar", width: 130 },
     { field: "nombres", headerName: "Nombres", width: 150 },
     { field: "apellidos", headerName: "Apellidos", width: 150 },
-    { field: "edad", headerName: "Edad", width: 100 },
+    { field: "grado", headerName: "Grado", width: 100 },
     { field: "seccion", headerName: "Sección", width: 100 },
-    { field: "año_escolar", headerName: "Año Escolar", width: 100 },
+    //{ field: "año_escolar", headerName: "Año Escolar", width: 100 },
   ];
 
   const actionColumn = [
@@ -92,7 +94,7 @@ const Students = () => {
                   className="viewButton"
                   onClick={() => _informeDescriptivo(params.row)}
                 >
-                  <Tooltip title="Informe Descriptivo">
+                  <Tooltip title="Añadir Informe Descriptivo">
                     <BookOutlinedIcon />
                   </Tooltip>
                 </div>
@@ -101,7 +103,7 @@ const Students = () => {
                   className="viewButton"
                   onClick={() => _rasgosPersonales(params.row)}
                 >
-                  <Tooltip title="Rasgos Personales">
+                  <Tooltip title="Establecer Rasgos Personales">
                     <LocalLibraryOutlinedIcon />
                   </Tooltip>
                 </div>
@@ -112,7 +114,7 @@ const Students = () => {
                     _calificativoFinal(params.row)
                   }
                 >
-                  <Tooltip title="Registro Estudiantil">
+                  <Tooltip title="Registrar Calificativo Final">
                     <BookOutlinedIcon />
                   </Tooltip>
                 </div>
@@ -155,20 +157,28 @@ const Students = () => {
     const { value: data } = await Swal.fire({
       title: "Cargar Informe Descriptivo",
       html: `<label class="bold">Estudiante: </label><span>${student.nombres} ${student.apellidos}</span><hr>
-      <textarea id="description" class="swal2-textarea" placeholder="Descripcion..." cols="27">`,
+      <br/>
+      <select name="qualification" style="padding: 8px" id="qualification">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+    <option value="E">E</option>
+    </select>
+`,
       showCancelButton: true,
       confirmButtonText: "Procesar",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         return {
-          literal_calificativo_final: document.getElementById("description").value,
+          literal_calificativo_final: document.getElementById("qualification").value,
         };
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
 
     if (data) {
-      const resp = await informeDescriptivo(student.id_representante, student._id, data);
+      const resp = await calificativoFinal(student._id, data);
       Swal.fire(resp.title, resp.text, resp.type);
     }
   }
@@ -177,14 +187,13 @@ const Students = () => {
     const { value: data } = await Swal.fire({
       title: "Cargar Informe Descriptivo",
       html: `<label class="bold">Estudiante: </label><span>${student.nombres} ${student.apellidos}</span>
-      <hr><input type="number" step="1" min="1" id="lapse" class="swal2-input" placeholder="Ingrese el lapso...">
-      <textarea id="description" class="swal2-textarea" placeholder="Descripcion..." cols="27">`,
+      <hr>
+      <textarea id="description" class="swal2-textarea" placeholder="Añade una descripción informativa del estudiante" cols="27">`,
       showCancelButton: true,
       confirmButtonText: "Procesar",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         return {
-          lapso: document.getElementById("lapse").value,
           descripcion: document.getElementById("description").value,
         };
       },
@@ -197,19 +206,65 @@ const Students = () => {
     }
   };
 
+  const rasgo = (NombreRasgo, idRasgo) => {
+    return `<div style="display: flex; justify-content: space-between; padding: 0 80px">
+    <small style="display: block"><strong>${NombreRasgo}:</strong></small>
+    <label for="${idRasgo}_verdadero"></label>
+    <input style="align-text: start" type="checkbox" id="${idRasgo}_verdadero" value="false" name="${NombreRasgo.toLowerCase()}" onclick="this.value = this.checked ? true : false">
+  </div>
+
+    `
+  }
+
   const _rasgosPersonales = async (student) => {
     const { value: data } = await Swal.fire({
       title: "Cargar Rasgos Personales",
       html: `<label class="bold">Estudiante: </label><span>${student.nombres} ${student.apellidos}</span>
-      <hr><input type="number" step="1" min="1" id="lapse" class="swal2-input" placeholder="Ingrese el lapso...">
-      <textarea id="description" class="swal2-textarea" placeholder="Descripcion..." cols="27">`,
+      <hr>
+      <br/>
+
+      ${rasgo("Motivación", "motivacion")}
+      ${rasgo("Responsabilidad", "responsabilidad")}
+      ${rasgo("Organizacion", "organizacion")}
+      ${rasgo("Disciplina", "disciplina")}
+      ${rasgo("Empatia", "empatia")}
+      ${rasgo("Adaptabilidad", "adaptabilidad")}
+      ${rasgo("Creatividad", "creatividad")}
+      ${rasgo("Trabajo en Equipo", "trabajo_en_equipo")}
+      ${rasgo("Honestidad", "honestidad")}
+      ${rasgo("Autodirección", "autodireccion")}
+      ${rasgo("Resiliencia", "resiliencia")}
+      ${rasgo("Paciencia", "paciencia")}
+      ${rasgo("Pensamiento Crítico", "pensamiento_critico")}
+      ${rasgo("Tolerancia a la Frustración", "tolerancia_frustracion")}
+      ${rasgo("Ambición", "ambicion")}
+      <br/>
+      <hr/>
+      `
+      ,
       showCancelButton: true,
       confirmButtonText: "Procesar",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
+        const rasgos = {
+          motivacion: document.getElementById("motivacion_verdadero").value,
+          responsabilidad: document.getElementById("responsabilidad_verdadero").value,
+          organizacion: document.getElementById("organizacion_verdadero").value,
+          disciplina: document.getElementById("disciplina_verdadero").value,
+          empatia: document.getElementById("empatia_verdadero").value,
+          adaptabilidad: document.getElementById("adaptabilidad_verdadero").value,
+          creatividad: document.getElementById("creatividad_verdadero").value,
+          trabajo_en_equipo: document.getElementById("trabajo_en_equipo_verdadero").value,
+          honestidad: document.getElementById("honestidad_verdadero").value,
+          autodireccion: document.getElementById("autodireccion_verdadero").value,
+          resiliencia: document.getElementById("resiliencia_verdadero").value,
+          paciencia: document.getElementById("paciencia_verdadero").value,
+          pensamiento_critico: document.getElementById("pensamiento_critico_verdadero").value,
+          tolerancia_frustracion: document.getElementById("tolerancia_frustracion_verdadero").value,
+          ambicion: document.getElementById("ambicion_verdadero").value,
+        }
         return {
-          lapso: document.getElementById("lapse").value,
-          rasgos: document.getElementById("description").value,
+          rasgos
         };
       },
       allowOutsideClick: () => !Swal.isLoading(),
@@ -257,7 +312,11 @@ const Students = () => {
   };
 
   useEffect(() => {
-    getStudents();
+    if (userType == "profesor") {
+      getStudentsByTeacher();
+    } else {
+      getStudents();
+    }
   }, []);
 
   return (

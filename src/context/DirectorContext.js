@@ -69,9 +69,9 @@ export function DirectorsProvider({ children }) {
     }
   };
 
-  const addGrades = async (lapse, grades) => {
+  const addGrades = async (grades) => {
     try {
-      const res = await addGradeRequest(user.token, lapse, grades);
+      const res = await addGradeRequest(user.token, grades);
       if(res.status === 200 && !res.data.error)
       {
         return {
@@ -95,9 +95,10 @@ export function DirectorsProvider({ children }) {
     }
   }
 
-  const addSections = async (lapse, grade, section) => {
+  const addSections = async (section) => {
     try {
-      const res = await addSectionsRequest(user.token, lapse, grade, section);
+      const res = await addSectionsRequest(user.token, section);
+      console.log(res)
       if(res.status === 200 && !res.data.error)
       {
         return {

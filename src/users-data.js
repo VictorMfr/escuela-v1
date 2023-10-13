@@ -29,15 +29,6 @@ export const userCols = [
     }
   },
   { field: 'email', headerName: 'Email', width: 150 }
-  // {
-  //     field: 'fullName',
-  //     headerName: 'Full name',
-  //     description: 'This column has a value getter and is not sortable.',
-  //     sortable: false,
-  //     width: 160,
-  //     valueGetter: (params: GridValueGetterParams) =>
-  //         `${params.row.apellido1 || ''} ${params.row.nombre || ''}`,
-  // },
 ];
 
 export const userRows = [

@@ -182,7 +182,7 @@ export function StudentProvider({ children }) {
     } catch (error) {
       return {
         title: 'Error!',
-        text: error.data.error,
+        text: error.data,
         type: 'error'
       }
       console.log(error);

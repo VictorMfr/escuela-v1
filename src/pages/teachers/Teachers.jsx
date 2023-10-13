@@ -42,7 +42,7 @@ const Teachers = () => {
       width: 200,
       renderCell: (params) => {
         if (params.value.length > 0) {
-          return <ul>{params.value.forEach((e) => (<li>{e.nombres} {e.apellidos}</li>))}</ul>
+          return <div style={{listStyle: "none"}}>{ params.value.map(Clase => <><small>Grado {Clase.grado} Sección { Clase.seccion.toUpperCase()}</small><br/></>) }</div>
         } else {
           return <b>-Sin clases asignadas-</b>
         }
@@ -112,7 +112,7 @@ const Teachers = () => {
     })
   }
 
-  const _assignClass = async (id) => {
+  const _assignClass = async (value) => {
     const { value: data } = await Swal.fire({
       title: 'Asignar clase',
       html: `<label>Grado: </label><input type="number" id="grado" class="swal2-input" step="1" required><br>
@@ -130,8 +130,8 @@ const Teachers = () => {
       allowOutsideClick: () => !Swal.isLoading(),
     });
 
-    if (data && id) {
-      const resp = await assignClass(id, data);
+    if (data && value) {
+      const resp = await assignClass(value, data);
       if(resp.error) Swal.fire("Error", resp.error, 'error');
     }
   }

@@ -5,16 +5,21 @@ import Widget from "../../components/widget/Widget";
 import { useTeachers } from "../../context/TeachersContext";
 import { useEffect } from "react";
 import { useStudents } from "../../context/StudentsContext";
-import { useUsers } from "../../context/UsersContext";
 import Swal from "sweetalert2";
 import { useDirectors } from "../../context/DirectorContext";
 import { useAuth } from "../../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
+import { useUsers } from "../../context/UsersContext";
+import { useRepresentants } from "../../context/RepresentantsContext";
+import { usePeriod } from "../../context/PeriodContext";
+import Person from "@mui/icons-material/Person"
 
 const Home = () => {
   const { teachers, getTeachers } = useTeachers();
   const { students, getStudents } = useStudents();
-  const { users, getUsers } = useUsers();
+  const { period, lapse, getPeriod, getLapse } = usePeriod();
+  const { users } = useUsers();
+  const { representants, getRepresentants } = useRepresentants();
   const { addPeriod, addLapse, addGrades, addSection } = useDirectors();
   const { userType } = useAuth();
   const navigate = useNavigate();
@@ -22,10 +27,10 @@ const Home = () => {
   useEffect(() => {
     getTeachers();
     getStudents();
-    getUsers();
+    getPeriod();
+    getLapse();
+    getRepresentants();
   }, []);
-
-  console.log()
 
   const _addPeriod = async () => {
     const { value: data } = await Swal.fire({
@@ -33,7 +38,8 @@ const Home = () => {
       html:
         '<label>Periodo: </label><input type="text" id="periodo" class="swal2-input"><br>' +
         '<label>Fecha Inicio: </label><input type="date" id="fecha_inicio" class="swal2-input"><br>' +
-        '<label>Fecha Fin: </label><input type="date" id="fecha_fin" class="swal2-input">',
+        '<label>Fecha Fin: </label><input type="date" id="fecha_fin" class="swal2-input">' +
+        '<br/><br/><p class="alert">Esta acción es irreversible</p>',
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Procesar",
@@ -55,18 +61,19 @@ const Home = () => {
   };
 
   const _addLapse = async () => {
+    const newLapse = lapse.lapso + 1;
+
     const { value: data } = await Swal.fire({
       title: "Ingrese los datos solicitados:",
       html:
-        '<label>Lapso: </label><input type="number" step="1" min="1" id="lapso" class="swal2-input"><br>' +
-        '<label>Proyecto: </label><textarea id="proyecto_escolar" class="swal2-textarea"></textarea>',
+        '<p>Nombre del Proyecto Escolar: </p><textarea id="proyecto_escolar" class="swal2-textarea"></textarea><p class="alert">Esta accion es irreversible</p>',
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Procesar",
+      cancelButtonText: "Cancelar",
       showLoaderOnConfirm: true,
-      preConfirm: async () => {
+      preConfirm() {
         return {
-          lapso: document.getElementById("lapso").value,
           proyectoEscolar: document.getElementById("proyecto_escolar").value,
         };
       },
@@ -74,6 +81,7 @@ const Home = () => {
     });
 
     if (data) {
+      console.log(data)
       const resp = await addLapse(data);
       Swal.fire(resp.title, resp.text, resp.type);
     }
@@ -96,9 +104,9 @@ const Home = () => {
       },
       allowOutsideClick: () => !Swal.isLoading()
     })
-    
+
     if (data) {
-      const resp = await addGrades(data.lapse, [{grado: data.grade}]);
+      const resp = await addGrades(data.lapse, [{ grado: data.grade }]);
       Swal.fire(resp.title, resp.text, resp.type);
     }
   }
@@ -124,47 +132,64 @@ const Home = () => {
       },
       allowOutsideClick: () => !Swal.isLoading()
     })
-    
+
     if (data) {
       const resp = await addSection(data.lapse, data.grade, data.section);
       Swal.fire(resp.title, resp.text, resp.type);
     }
   }
 
+  // Se necesita un reporte de cuantos Administradores hay, profesores y estudiantes
+  // Debe haber un boton que diga agregar actor
+  // Debe haber un control en cuanto a los periodos, grados, y secciones
+
   return (
     <div className="home">
       <Sidebar />
       <div className="homeContainer">
         <Navbar />
-        <div className="widgets">
-          
-          {
-            (userType === "director") && (
-              <>
-                <Widget type="user" amount={users.length ?? 0} />
-                
-              </>
-            )
-          }
-          {
-            (userType === "director" || userType === "administrador") && (
-              <>
-                <Widget type="teacher" amount={teachers.length ?? 0} />
-              </>)
-          }
-          <Widget type="student" amount={students.length ?? 0} />
-        </div>
+        {userType === "director" && (
+          <>
+            <h3 className="htitle">ESTADISTICAS</h3>
+            <div className="widgets">
+              {
+                (userType === "director" || userType === "administrador") && (
+                  <>
+                    <Widget type="teacher" amount={teachers.length ?? 0} />
+                  </>)
+              }
+              <Widget type="student" amount={students.length ?? 0} />
+              <Widget type="user" amount={users.length ?? 0} />
+              <Widget type="representant" amount={representants.length ?? 0} />
+            </div>
+            <p className="htitle">(La información de periodo se actualiza al recargar la página)</p>
+            <div className="widgets">
+              <Widget type="periodData" amount={period ? period.lapsos : ""} onclick={_addLapse} />
+            </div>
+            {
+              (userType === "director") && (
+
+                <>
+                  <h3 className="htitle">TIEMPO ACTUAL</h3>
+                  <div className="widgets">
+                    <Widget type="period" amount={period ? period.periodo : ""} onclick={_addPeriod} />
+                    <Widget type="lapse" amount={lapse ? lapse.lapso : ""} onclick={_addLapse} />
+                  </div>
+
+                  <h3 className="htitle">PANEL DE CONTROL DE PERIODO ACTUAL</h3>
+                  <div className="widgets">
+                    <Widget type="grade" amount="" onclick={() => navigate("/grades/register")} />
+                    <Widget type="section" amount="" onclick={() => navigate("/sections/register")} />
+                    <Widget type="students" amount="" onclick={() => navigate("/students/register")} />
+                  </div>
+                </>
+              )}
+          </>)}
         {
-          (userType === "director") && (
-            <div className="listContainer">
-              <div className="listTitle">Panel de Control.</div>
-              <div className="widgets">
-                <Widget type="period" amount="" onclick={_addPeriod} />
-                <Widget type="lapse" amount="" onclick={_addLapse} />
-                <Widget type="grade" amount="" onclick={() => navigate("/grades/register")} />
-                <Widget type="section" amount="" onclick={() => navigate("/sections/register")}/>
-                <Widget type="students" amount="" onclick={() => navigate("/students/register")}/>
-              </div>
+          userType != "director" && (
+            <div style={{ width: "100%", height: "90%", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
+              <p><Person style={{ fontSize: 58 }} /></p>
+              <h4 style={{ fontWeight: "normal" }}>{`BIENVENIDO ${userType.toUpperCase()}`}</h4>
             </div>
           )
         }

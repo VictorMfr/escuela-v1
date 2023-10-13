@@ -1,9 +1,4 @@
 import "./widget.scss"
-import PeopleIcon from '@mui/icons-material/People';
-import SchoolIcon from '@mui/icons-material/School';
-import FolderSharedIcon from '@mui/icons-material/FolderShared';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import AutoModeOutlinedIcon from '@mui/icons-material/AutoModeOutlined';
 
 const Widget = ({ type, amount, onclick }) => {
 
@@ -15,9 +10,6 @@ const Widget = ({ type, amount, onclick }) => {
         title: "ADMINISTRADORES:",
         amount: amount,
         link: '',
-        icon: (
-          <PeopleIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
-        )
       }
       break;
     case "teacher":
@@ -25,9 +17,7 @@ const Widget = ({ type, amount, onclick }) => {
         title: "PROFESORES:",
         amount: amount,
         link: '',
-        icon: (
-          <AssignmentIndIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
-        )
+
       }
       break;
     case "student":
@@ -35,64 +25,78 @@ const Widget = ({ type, amount, onclick }) => {
         title: "ESTUDIANTES:",
         amount: amount,
         link: '',
-        icon: (
-          <SchoolIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
-        )
+
       }
       break;
     case "period":
       data = {
-        title: "PERIODO ESCOLAR",
+        title: "PERIODO ESCOLAR ACTUAL",
         amount: amount,
         onClick: onclick,
-        link: 'Cargar',
-        icon: (
-          <AutoModeOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
-        )
+        link: 'Iniciar nuevo',
+
       }
       break;
     case "lapse":
       data = {
-        title: "LAPSO",
+        title: "LAPSO ACTUAL",
         amount: amount,
         onClick: onclick,
-        link: 'Cargar',
-        icon: (
-          <AutoModeOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
-        )
+        link: 'Iniciar nuevo',
+
+      }
+      break;
+    case "periodData":
+      data = {
+        title: "INFORMACIÓN DEL PERIODO",
+        amount: amount,
+        onClick: onclick
       }
       break;
     case "grade":
       data = {
-        title: "GRADO",
+        title: "AGREGAR GRADOS",
         amount: amount,
         onClick: onclick,
-        link: 'Cargar',
-        icon: (
-          <AutoModeOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
-        )
+        link: 'Nuevo en Lapso Actual',
+
       }
       break;
     case "section":
       data = {
-        title: "SECCIÓN",
+        title: "AGREGAR SECCIONES",
         amount: amount,
         onClick: onclick,
-        link: 'Cargar',
-        icon: (
-          <AutoModeOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff" }} />
-        )
+        link: 'Nuevo en Lapso Actual',
+
       }
       break;
     case "students":
       data = {
-        title: "ESTUDIANTES",
+        title: "ASIGNAR ESTUDIANTES",
         amount: amount,
         onClick: onclick,
-        link: 'Cargar',
-        icon: (
-          <AutoModeOutlinedIcon className="icon" style={{ backgroundColor: "rgba(255, 50, 255, 0.2)", color: "#6439ff"}} />
-        )
+        link: 'Nuevo en Lapso Actual',
+
+      }
+      break;
+
+    case "representant":
+      data = {
+        title: "REPRESENTANTES:",
+        amount: amount,
+        onClick: onclick,
+        link: '',
+
+      }
+      break;
+    case "teacher":
+      data = {
+        title: "PROFESORES",
+        amount: amount,
+        onClick: onclick,
+        link: '',
+
       }
       break;
     default:
@@ -100,14 +104,43 @@ const Widget = ({ type, amount, onclick }) => {
   }
 
   return (
-    <div className="widget">
-      <div className="left">
+    <div className="widget" style={{maxWidth: data.title == "INFORMACIÓN DEL PERIODO" && data.amount? "60%": 168}}>
+      <div className={data.title == "INFORMACIÓN DEL PERIODO" && data.amount? "": "left"}>
         <span className="title">{data.title}</span>
-        <span className="counter">{data.amount}</span>
-        <span className="link" onClick={onclick}>{data.link}</span>
-      </div>
-      <div className="right">
-        {data.icon}
+        {data.title != "INFORMACIÓN DEL PERIODO" && <span className="counter">{data.amount}</span>}
+        {data.title == "INFORMACIÓN DEL PERIODO" && data.amount && (
+          <ul className="periodDetails">
+            {data.amount.map(lapse => (
+              <li>
+                <hr/>
+                <br/>
+                <p>LAPSO: {lapse.lapso}</p>
+                <p>PROYECTO ESCOLAR: {lapse.proyectoEscolar}</p>
+                <br/>
+                <small>{lapse.grados.length > 0? "GRADOS:": "Sin datos"}</small>
+                <ul>
+                  {lapse.grados.map(grade => (
+                    <li>
+                      <small>GRADO {grade.grado}</small>
+                      <br/>
+                      {grade.secciones.length > 0? <small>SECCIONES:</small>: ""}
+                      <ul>
+                        {grade.secciones.map(section => (
+                          <li>{section.seccion.toUpperCase()}</li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+                <br/>
+              </li>   
+            ))} 
+          </ul>
+        )}
+        
+        {data.link && <button className="link" onClick={onclick} style={{marginTop: data.amount? 21: 0}}>{data.link}</button>}
+        {data.title == "INFORMACIÓN DEL PERIODO" && !data.amount && <p>No hay datos</p>}
+        {data.title == "INFORMACIÓN DEL PERIODO" && data.amount == "" && <p>No hay datos en el periodo</p>}
       </div>
     </div>
   )
