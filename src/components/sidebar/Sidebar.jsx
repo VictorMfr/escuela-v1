@@ -39,12 +39,12 @@ const Sidebar = () => {
           </Link>
 
           {
-            (userType === "representante") && (
+            (userType == "representante") && (
               <>
-                <Link to={`/representants/${user[`${userType}`]._id}`} style={{ textDecoration: "none" }}>
+                <Link to={`students`} style={{ textDecoration: "none" }}>
                   <li>
                     <PeopleIcon className="icon" />
-                    <span>Representante</span>
+                    <span>Hijos</span>
                   </li>
                 </Link>
               </>

@@ -24,7 +24,9 @@ const DataTable = ({ title, createUrl, tableCols, tableRows, actionColumn }) => 
         pageSizeOptions={[10, 50, 100]}
         checkboxSelection
         disableRowSelectionOnClick
-        getRowId={(row) => row._id}
+        getRowId={(row) => {
+          return row._id
+        }}
       />
     </div>
   )

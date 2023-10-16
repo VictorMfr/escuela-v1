@@ -3,6 +3,7 @@ import {
   assignSectionRequest,
   createStudentRequest,
   editStudentRequest,
+  getStudentDescriptiveReportRequest,
   getStudentNotesRequest,
   getStudentsByRepresentantRequest,
   getStudentsByTeacherRequest,
@@ -11,6 +12,7 @@ import {
   setFinalQualifierStudentRequest,
   setInformStudentRequest,
   setStudentPersonalTraitsRequest,
+  getStudentProofRequest
 } from "../api/students";
 import { useAuth } from "./AuthProvider";
 import { HttpStatusCode } from "axios";
@@ -28,6 +30,10 @@ export const useStudents = () => {
 
 export function StudentProvider({ children }) {
   const [students, setStudents] = useState([]);
+
+  // Student-Related Reports
+  const [studentDynamicReport, setStudentDynamicReport] = useState();
+
   const { user } = useAuth();
 
   const getStudents = async () => {
@@ -71,7 +77,7 @@ export function StudentProvider({ children }) {
   const getStudentsByRepresentant = async (id) => {
     try {
       const res = await getStudentsByRepresentantRequest(user.token, id);
-      setStudents(res.data !== "" ? res.data : []);
+      setStudents(res.data? res.data.message : []);
     } catch (error) {
       console.log(error);
     }
@@ -217,14 +223,43 @@ export function StudentProvider({ children }) {
   };
 
   // Obtener Boletin del estudiante
-  const getStudentNotes = async (id) => {
+  const getStudentBulletin = async (id) => {
     try {
       const res = await getStudentNotesRequest(user.token, id);
-      setStudents(res.data !== "" ? res.data : []);
+      setStudentDynamicReport(res.data.message)
     } catch (error) {
       console.log(error);
     }
   };
+
+  // Obtener Informe Descriptivo del estudiante
+  const getStudentReport = async (id) => {
+    try {
+      const res = await getStudentDescriptiveReportRequest(user.token, id);
+      setStudentDynamicReport(res.data.message)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // Obtener rasgos Personales del Estudiantes
+  const getStudentPersonalTraits = async (id) => {
+    try {
+      const res = await getStudentPersonalTraits(user.token, id);
+      setStudentDynamicReport(res.data.message)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getStudentProof = async (id) => {
+    try {
+      const res = await getStudentProofRequest(user.token, id);
+      setStudentDynamicReport(res.data.message)
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <StudentContext.Provider
@@ -242,7 +277,11 @@ export function StudentProvider({ children }) {
         assignSection,
         removeSection,
         calificativoFinal,
-        getStudentNotes,
+        studentDynamicReport,
+        getStudentBulletin,
+        getStudentPersonalTraits,
+        getStudentReport,
+        getStudentProof
       }}
     >
       {children}

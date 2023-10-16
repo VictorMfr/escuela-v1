@@ -20,6 +20,7 @@ const Students = () => {
   const {
     getStudents,
     getStudentsByTeacher,
+    getStudentsByRepresentant,
     students,
     assignSection,
     removeSection,
@@ -314,6 +315,8 @@ const Students = () => {
   useEffect(() => {
     if (userType == "profesor") {
       getStudentsByTeacher();
+    } else if (userType == "representante") {
+      getStudentsByRepresentant();
     } else {
       getStudents();
     }
@@ -325,7 +328,7 @@ const Students = () => {
       <div className="listContainer">
         <Navbar />
         <DataTable
-          title="Estudiantes"
+          title={userType == "representante"? "Hijos": "Estudiantes"}
           tableCols={tableCols}
           tableRows={students}
           actionColumn={actionColumn}

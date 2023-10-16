@@ -16,6 +16,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 import { useAuth } from "../../context/AuthProvider";
 import { usePeriod } from "../../context/PeriodContext";
 import { useTeachers } from "../../context/TeachersContext";
+import { useStudents } from "../../context/StudentsContext";
 
 const styles = StyleSheet.create({
   page: {
@@ -46,69 +47,24 @@ const styles = StyleSheet.create({
 });
 
 const Informe = () => {
-  const { user } = useAuth();
+
+  const { studentDynamicReport, getStudentReport } = useStudents();
   const { id } = useParams();
-  const [student, setStudent] = useState();
-  const { period, getPeriod } = usePeriod();
-  const {teachers, getTeachers} = useTeachers() 
-
-  const getStudent = async () => {
-    try {
-      const laspeRequest = await axios.get("/direccion/lapsoActual", {
-        headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
-      });
-
-      // Ir haciendo una busqueda para encontrar la cedula del estudiante en Periodo
-      const foundGrade = laspeRequest.data.grados.find(grado => {
-        return grado.secciones.find(sec => {
-          return sec.estudiantes.find(est => {
-            return est._id == id;
-          })
-        })
-      })
-
-      const foundSection = foundGrade.secciones.find(sec => {
-        return sec.estudiantes.find(est => {
-          return est._id == id;
-        })
-      })
-
-      const foundStudent = foundSection.estudiantes.find(est => {
-        return est._id == id;
-      });
-
-      
-
-      setStudent({ student: foundStudent, lapseProject: laspeRequest.data.proyectoEscolar, teacher: foundSection.docente })
-
-    } catch (error) {
-      Swal.fire(
-        'Error al cargar los datos.',
-        error.message,
-        'error'
-      )
-      console.log(error)
-
-    }
-  };
 
   useEffect(() => {
-    getStudent();
-    getPeriod();
-    getTeachers();
-  }, [])
+    getStudentReport(id);
+  }, []);
 
+  const data = studentDynamicReport ? studentDynamicReport.datosInforme : "";
 
   return (
     <PDFViewer style={{ width: "99%", height: "98vh" }}>
-      <Document>
+      {data && <Document>
         <Page size="Letter" style={styles.page}>
           <View style={styles.title}>
-            <Text>Proyecto: {student? student.lapseProject: ""}</Text>
-            <Text>Año escolar: {period? period.periodo: ""}</Text>
-            <Text>Alumno: {student? student.student.nombre: ""} {student? student.student.apellido: ""}</Text>
+            <Text>Proyecto: {data.proyectoEscolar}</Text>
+            <Text>Año escolar: {data.periodoEscolar}</Text>
+            <Text>Alumno: {data.nombres} {data.apellidos}</Text>
             <Text
               style={{
                 paddingTop: "15px",
@@ -122,16 +78,16 @@ const Informe = () => {
           </View>
           <View style={styles.body}>
             <Text style={styles.bodyText}>
-              {student? student.student.informe_descriptivo: ""}
+              {data.informe_descriptivo}
             </Text>
             <Text style={styles.bodyText}>
-              Docente de Grado: ________
-              Director: ___________
-              Representante: ___________
+              Docente de Grado: {data.docente}
+              Director: {data.director}
+              Representante: {data.representante}
             </Text>
           </View>
         </Page>
-      </Document>
+      </Document>}
     </PDFViewer>
   );
 };

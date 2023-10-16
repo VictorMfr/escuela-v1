@@ -25,6 +25,7 @@ import Informe from "./pages/students/Informe"
 import Constancia from "./pages/students/Constancia"
 import Representant from "./pages/representant/Representants";
 import RepresentantsForm from "./pages/representant/RepresentantsForm";
+import RepresentantStudents from "./pages/representant/RepresentantStudents";
 
 const LazyHome = React.lazy(() => import("./pages/home/Home"));
 const LazyUsers = React.lazy(() => import("./pages/users/Users"));
@@ -58,50 +59,52 @@ function App() {
                 <StudentProvider>
                   <RepresentantProvider>
                     <BrowserRouter>
-                      <Suspense fallback={<LoadingModal show={true}/>}>
+                      <Suspense fallback={<LoadingModal show={true} />}>
                         <Routes>
-                          <Route path="/home" element={<LandingPage/>}/> 
+                          <Route path="/home" element={<LandingPage />} />
                           <Route path="/login" element={<Login />} />
                           <Route path="/register" element={<Register />} />
                           <Route path="/grades/register" element={<RegisterGrades />} />
                           <Route path="/sections/register" element={<RegisterSections />} />
                           <Route path="/students/register" element={<RegisterStudents />} />
+
+
+
+
                           <Route path="/" element={<ProtectedRoute />}>
                             <Route index element={<LazyHome />} />
+
                             <Route path="personal">
                               <Route index element={<LazyPersonal />} />
                               <Route path="create" element={<LazyCreatePersonal />} />
                             </Route>
+
                             <Route path="representants">
                               <Route index element={<Representant />} />
                               <Route path="create" element={<RepresentantsForm title="Nuevo Representante" />} />
                               <Route path="edit/:id" element={<RepresentantsForm title="Modificar Representante" />} />
-                              <Route path=":id" element={<LazyShowRepresentant />} />
                               <Route path=":id_rep/add-student" element={<LazyStudentForm />} />
                             </Route>
+
                             <Route path="students">
                               <Route index element={<LazyStudents />} />
                               <Route path="evaluate" element={<LazyEvaluate />} />
-                              <Route
-                                path=":id/boletin"
-                                element={<Boletin/>}
-                              />
-                              <Route
-                                path=":id/informe"
-                                element={<Informe />}
-                              />
-                              <Route
-                                path=":id/constancia"
-                                element={<Constancia />}
-                              />
+
+                              <Route path=":id/boletin" element={<Boletin />}/>
+                              <Route path=":id/informe" element={<Informe />} />
+                              <Route path=":id/constancia" element={<Constancia />} />
+                              
                               <Route path="create" element={<LazyStudentForm />} />
                               <Route path=":id_est/representants/:id_rep" element={<LazyStudentForm />} />
+                              
                             </Route>
+
                             <Route path="teachers">
                               <Route index element={<LazyTeachers />} />
                               <Route path=":id_teacher" element={<LazyViewTeacher />} />
                               <Route path="create" element={<LazyCreateTeacher />} />
                             </Route>
+
                             <Route path="users">
                               <Route index element={<LazyUsers />} />
                               <Route path="create" element={<LazyCreateUser />} />
@@ -109,7 +112,6 @@ function App() {
                               <Route path=":id_user" element={<LazyViewUser />} />
                             </Route>
                           </Route>
-                          <Route path="*" element={<Navigate to={"/home"} replace={true}/>}/>
                         </Routes>
                       </Suspense>
                     </BrowserRouter>

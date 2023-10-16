@@ -40,3 +40,4 @@ export const rasgosPersonalesRequest = (token, data) => axios.post(
 
 export const proyectoEscolarRequest = (token, data) => axios.post(
     'proyectoEscolar/registrarProyecto', data, config(token));
+
