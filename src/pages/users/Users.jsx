@@ -20,7 +20,7 @@ const Users = () => {
     {
       field: 'name', headerName: 'Nombre y Apellido', width: 200,
       renderCell: (params) => {
-        return (<Link to={`/users/${params.row._id}`}>{ params.row.name }</Link>)
+        return (<p>{ params.row.name }</p>)
       }
     },
     { field: 'email', headerName: 'Email', width: 200 },

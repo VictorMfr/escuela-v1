@@ -10,11 +10,14 @@ import { useDirectors } from "../../context/DirectorContext";
 import { useNavigate } from "react-router-dom";
 import { useStudents } from '../../context/StudentsContext'
 import { useEffect } from "react";
+import "./home.scss"
 
 export const RegisterStudents = () => {
 
   const navigate = useNavigate();
   const [tableRows, setTableRows] = useState([])
+  const [gradeSelect, setGradeSelect] = useState("1");
+  const [sectionSelect, setSectionSelect] = useState("a");
   const [selected, setSelected] = useState(null);
   const { addStudents } = useDirectors();
   const { students, getStudentsList } = useStudents();
@@ -23,6 +26,14 @@ export const RegisterStudents = () => {
     { field: "student", headerName: "Estudiante", width: 250 },
     { field: "cedula_escolar", headerName: "Cédula Escolar", width: 200 },
   ];
+
+  const changeGradeSelectHandler = (event) => {
+    setGradeSelect(event.target.value);
+  }
+
+  const changeSectionSelectHandler = (event) => {
+    setSectionSelect(event.target.value);
+  }
 
   const actionColumn = [
     {
@@ -45,6 +56,15 @@ export const RegisterStudents = () => {
 
   const addRow = () => {
     const input = document.getElementById('student')
+
+    if (tableRows.length == 0 && !selected) {
+      Swal.fire("Atención", "Selecciona al menos un estudiante", "warning")
+        .then(() => {
+          input.focus();
+        })
+      return;
+    }
+    
     const found = tableRows.find((e) => e.id === selected.id);
 
     if (found) {
@@ -72,17 +92,17 @@ export const RegisterStudents = () => {
 
   const saveGrades = async () => {
     const data = tableRows
-    const grade = document.getElementById("grade")
-    const section = document.getElementById("section")
-    if (!grade.value) {
+    
+
+    if (!gradeSelect) {
       Swal.fire("Atención", "Indique el grado a registrar", "warning")
         .then(() => {
-          grade.focus();
+          gradeSelect.focus();
         })
-    } else if (!section.value) {
+    } else if (!sectionSelect) {
       Swal.fire("Atención", "Indique la sección a registrar", "warning")
         .then(() => {
-          section.focus();
+          sectionSelect.focus();
         })
     } else if (data.length <= 0) {
       Swal.fire("Atención", "Ingrese al menos 1 estudiante a procesasr", "warning")
@@ -90,7 +110,7 @@ export const RegisterStudents = () => {
           document.getElementById("student").focus()
         })
     } else {
-      console.log(grade.value, section.value, data)
+      console.log(gradeSelect, sectionSelect, data)
       Swal.fire({
         title: 'Confirmar.',
         text: "Confirme realizar el proceso.",
@@ -99,7 +119,7 @@ export const RegisterStudents = () => {
         confirmButtonText: 'Procesar'
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const resp = await addStudents(grade.value, section.value, data);
+          const resp = await addStudents(gradeSelect, sectionSelect, data);
           Swal.fire(resp.title, resp.text, resp.type).then((res) => {
             if (res.isConfirmed && resp.type === "success") navigate("/")
           });
@@ -119,9 +139,9 @@ export const RegisterStudents = () => {
         <Navbar />
         <br /><br />
         <div className="listContainer" >
-          <div className="widgets" style={{ display: "flex", gap: 5, justifyContent: "center" }}>
+          <div className="widgets" style={{ display: "flex", gap: 21, justifyContent: "center" }}>
             <div className="left">
-              <span className="title">SELECCIONE ESTUDIANTE</span>
+              <span className="title">Selecciones estudiante</span>
               <Autocomplete
                 disablePortal
                 id="student"
@@ -134,45 +154,55 @@ export const RegisterStudents = () => {
               />
             </div>
             <div>
-              <p className="title">INDIQUE EL GRADO</p>
-              <TextField
-                type="number"
-                step="1"
-                min="1"
+              <p className="title">Indique el grado</p>
+              <Select
+                labelId="grade-label"
                 id="grade"
-                label="Ingrese el grado"
-                variant="filled"
+                value={gradeSelect}
+                onChange={changeGradeSelectHandler}
                 required
                 size="small"
-              />
+                variant="filled"
+                style={{width: 300}}
+              >
+                <MenuItem value={"1"}>Primer Grado</MenuItem>
+                <MenuItem value={"2"}>Segundo Grado</MenuItem>
+                <MenuItem value={"3"}>Tercer Grado</MenuItem>
+                <MenuItem value={"4"}>Cuarto Grado</MenuItem>
+                <MenuItem value={"5"}>Quinto Grado</MenuItem>
+                <MenuItem value={"6"}>Sexto Grado</MenuItem>
+              </Select>
             </div>
 
             <div>
-              <p className="title">INDIQUE LA SECCION</p>
-              <TextField
-                type="String"
-                step="1"
-                min="1"
+              <p className="title">Indique la sección</p>
+              <Select
+                labelId="section-label"
                 id="section"
-                label="Ingrese la sección (Ej. 'a' o 'A')"
-                variant="filled"
                 required
                 size="small"
-              />
+                variant="filled"
+                onChange={changeSectionSelectHandler}
+                value={sectionSelect}
+                style={{width: 300}}
+              >
+                <MenuItem value={"a"}>Sección A</MenuItem>
+                <MenuItem value={"b"}>Sección B</MenuItem>
+                <MenuItem value={"c"}>Sección C</MenuItem>
+                <MenuItem value={"d"}>Sección D</MenuItem>
+                <MenuItem value={"e"}>Sección E</MenuItem>
+              </Select>
             </div>
-
-
-
           </div>
         </div>
         <div style={{ display: "flex", justifyContent: "center" }} >
-          <button style={{ backgroundColor: "rebeccapurple", padding: 10, outline: "none", border: "none", color: "white", marginTop: 21 }} onClick={addRow}>
+          <button className="button_link" style={{ backgroundColor: "rebeccapurple", padding: 10, outline: "none", border: "none", color: "white", marginTop: 21 }} onClick={addRow}>
             Agregar a la lista
           </button>
         </div>
 
         <div className="datatable">
-          <div className="datatableTitle" style={{ display: "flex", justifyContent: "space-around" }}>
+          <div className="datatableTitle" style={{width: 725, margin: "0 auto", marginTop: 21, marginBottom: 21}}>
             <p>Estudiantes a Procesar</p>
             <Button variant="outlined" onClick={saveGrades}>
               Guardar
@@ -196,9 +226,9 @@ export const RegisterStudents = () => {
               }
             }}
             pageSizeOptions={[10, 50, 100]}
-            checkboxSelection
-            disableRowSelectionOnClick
           // getRowId={(row) => row._id}
+          style={{width: "60%", margin: "0 auto"}}
+          components={{ NoRowsOverlay: () => (<></>) }}
           />
         </div>
       </div>

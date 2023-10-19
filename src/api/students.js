@@ -53,3 +53,6 @@ export const getStudentProofRequest = (token, id) => axios.get(`estudiante/${id}
 
 // Obtener informe Descriptivo del estudiante
 export const getStudentDescriptiveReportRequest = (token, id) => axios.get(`estudiante/${id}/informeDescriptivo`, config(token));
+
+// Establecer rasgos personales: patch /estudiante/:estudiante/cargarRasgosPersonales
+export const getStudentPersonalTraitsRequest = (token, id) => axios.get(`/estudiantes/${id}/rasgosPersonales`, config(token))

@@ -4,68 +4,88 @@ import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { useRepresentants } from '../../context/RepresentantsContext';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useAuth } from '../../context/AuthProvider';
+import { useEffect, useState } from 'react';
+import Classes from "./RepresentantsForm.module.css";
+import LoadingModal from '../register/LoadingModal';
 
 const CreateRepresentant = ({ title }) => {
-  const { register, handleSubmit } = useForm();
-  const { createRepresentant, getRepresentant } = useRepresentants();
+  const { register, setValue, handleSubmit } = useForm();
+  const { createRepresentant, getRepresentant, updateRepresentant } = useRepresentants();
   const navigate = useNavigate()
-  const params = useParams()
+  const { id } = useParams()
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (params.id) {
-      _getRepresentant(params.id)
+    if (id) {
+      _getRepresentant(id)
     }
   }, [])
 
-  const _getRepresentant = async (id) => {
-    const resp = await getRepresentant(params.id)
-    console.log(resp)
+
+
+  const _getRepresentant = async (Id) => {
+    const resp = await getRepresentant(Id)
+
+    setValue("name", resp.name);
+    setValue("email", resp.email);
+    
     if (resp.error) Swal.fire('Error', resp.error, 'error').then(() => { window.history.back(); })
   }
 
   const onSubmit = handleSubmit(async (data) => {
-    const res = await createRepresentant(data)
-    if (res === true) {
-      navigate("/representants")
+    setIsLoading(true)
+
+    if (title == "Modificar Representante") {
+      const res = await updateRepresentant(id, data)
+      
+      if (res) {
+        navigate("/representants")
+      } else {
+        Swal.fire("Error en el proceso", res, "error");
+      }
     } else {
-      Swal.fire("Error en el proceso", res, "error");
+      const res = await createRepresentant(data)
+      if (res === true) {
+        navigate("/representants")
+      } else {
+        Swal.fire("Error en el proceso", res, "error");
+      }
     }
+    setIsLoading(false)
   })
 
+  let optionalInputBasedOnFormType = title == "Modificar Representante";
+
   return (
-    <div className='new'>
+    <div className={Classes.screen}>
       <Sidebar />
-      <div className="newContainer">
+      <div className={Classes.container}>
         <Navbar />
-        <div className="top">
-          <h1>{title}</h1>
-          <Link to='/representants' className="link">
-            Volver
-          </Link>
-        </div>
-        <div className="bottom">
-          <div className="right">
-            <form onSubmit={onSubmit}>
-              <div className="formInput">
-                <label htmlFor="name">Nombre</label>
-                <input type="text" {...register("name")} placeholder='...' autoFocus required />
-              </div>
-              <div className="formInput">
-                <label htmlFor="email">Email</label>
-                <input type="email" {...register("email")} placeholder="..." required />
-              </div>
-              <div className="formInput">
-                <label htmlFor="password">Contraseña</label>
-                <input type="password" {...register("password")} placeholder='...' required />
-              </div>
-              <div className="formInput">
-                <button>Guardar</button>
-              </div>
-            </form>
+        <div>
+          <div className={Classes.top}>
+            <h1>{title}</h1>
+            {optionalInputBasedOnFormType}
+            <Link to='/representants' className={Classes.backlink}>
+              Volver
+            </Link>
           </div>
+          <form onSubmit={onSubmit} className={Classes.representantForm}>
+
+            <label htmlFor="name">Nombre</label>
+            <input type="text" {...register("name")} placeholder='Ingrese el nombre' autoFocus required={optionalInputBasedOnFormType} />
+
+            <label htmlFor="email">Email</label>
+            <input type="email" {...register("email")} placeholder="Ingrese el email" required={optionalInputBasedOnFormType} />
+
+            <label htmlFor="password">Contraseña</label>
+            <input type="password" {...register("password")} placeholder='Ingrese la contraseña' required={optionalInputBasedOnFormType} />
+
+            <div className={Classes.saveButton}>
+              <button>Guardar</button>
+            </div>
+          </form>
         </div>
+        <LoadingModal show={isLoading} />
       </div>
     </div>
   )

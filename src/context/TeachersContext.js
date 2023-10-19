@@ -99,13 +99,14 @@ export function TeacherProvider({ children }) {
       if (res.status === 200) return res.data;
     } catch (error) {
       console.log(error);
+      return error.response.data
     }
   };
 
   //Retirar sección
-  const removeClass = async (id) => {
+  const removeClass = async (id, id_class) => {
     try {
-      const res = await removeClassRequest(user.token, id);
+      const res = await removeClassRequest(user.token, id, id_class);
       if (res.status === 200) return res.data;
     } catch (error) {
       console.log(error);

@@ -14,19 +14,21 @@ import { useRepresentants } from "../../context/RepresentantsContext";
 import { usePeriod } from "../../context/PeriodContext";
 import Person from "@mui/icons-material/Person"
 
+
 const Home = () => {
   const { teachers, getTeachers } = useTeachers();
   const { students, getStudents } = useStudents();
   const { period, lapse, getPeriod, getLapse } = usePeriod();
-  const { users } = useUsers();
+  const { users, getUsers } = useUsers();
   const { representants, getRepresentants } = useRepresentants();
   const { addPeriod, addLapse, addGrades, addSection } = useDirectors();
-  const { userType } = useAuth();
+  const { userType, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     getTeachers();
     getStudents();
+    getUsers();
     getPeriod();
     getLapse();
     getRepresentants();
@@ -54,9 +56,13 @@ const Home = () => {
       allowOutsideClick: () => !Swal.isLoading(),
     });
 
+    
+
     if (data) {
       const resp = await addPeriod(data);
-      Swal.fire(resp.title, resp.text, resp.type);
+      Swal.fire(resp.title, resp.text, resp.type).then(() => {
+        navigate(0)
+      });
     }
   };
 
@@ -83,65 +89,14 @@ const Home = () => {
     if (data) {
       console.log(data)
       const resp = await addLapse(data);
-      Swal.fire(resp.title, resp.text, resp.type);
+      Swal.fire(resp.title, resp.text, resp.type).then(() => {
+        navigate(0)
+      });
     }
   }
 
-  const _addGrade = async () => {
-    const { value: data } = await Swal.fire({
-      title: 'Ingrese los datos solicitados:',
-      html:
-        `<label>Lapso: </label><input type="number" id="lapse" step="1" min="1" class="swal2-input" required/>
-        <label>Grado: </label><input type="number" id="grade" step="1" min="1" class="swal2-input" required/>`,
-      showCancelButton: true,
-      confirmButtonText: 'Procesar',
-      showLoaderOnConfirm: true,
-      preConfirm: async () => {
-        return {
-          lapse: document.getElementById("lapse").value,
-          grade: document.getElementById("grade").value,
-        };
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    })
-
-    if (data) {
-      const resp = await addGrades(data.lapse, [{ grado: data.grade }]);
-      Swal.fire(resp.title, resp.text, resp.type);
-    }
-  }
-
-  const _addSection = async () => {
-    const { value: data } = await Swal.fire({
-      title: 'Ingrese los datos solicitados:',
-      html:
-        `<label>Lapso: </label><input type="number" id="lapse" step="1" min="1" class="swal2-input" required/>
-        <label>Grado: </label><input type="number" id="grade" step="1" min="1" class="swal2-input" required/>
-        <label>Sección: </label><input type="text" id="section" class="swal2-input" required/>`,
-      showCancelButton: true,
-      confirmButtonText: 'Procesar',
-      showLoaderOnConfirm: true,
-      preConfirm: async () => {
-        return {
-          lapse: document.getElementById("lapse").value,
-          grade: document.getElementById("grade").value,
-          section: [
-            { seccion: document.getElementById("section").value }
-          ],
-        };
-      },
-      allowOutsideClick: () => !Swal.isLoading()
-    })
-
-    if (data) {
-      const resp = await addSection(data.lapse, data.grade, data.section);
-      Swal.fire(resp.title, resp.text, resp.type);
-    }
-  }
-
-  // Se necesita un reporte de cuantos Administradores hay, profesores y estudiantes
-  // Debe haber un boton que diga agregar actor
-  // Debe haber un control en cuanto a los periodos, grados, y secciones
+  // Se necesita identificar por parte del profesor o administrador si está habilitado o no
+  
 
   return (
     <div className="home">
@@ -162,7 +117,6 @@ const Home = () => {
               <Widget type="user" amount={users.length ?? 0} />
               <Widget type="representant" amount={representants.length ?? 0} />
             </div>
-            <p className="htitle">(La información de periodo se actualiza al recargar la página)</p>
             <div className="widgets">
               <Widget type="periodData" amount={period ? period.lapsos : ""} onclick={_addLapse} />
             </div>

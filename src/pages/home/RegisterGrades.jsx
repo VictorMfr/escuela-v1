@@ -111,6 +111,7 @@ export const RegisterGrades = () => {
             required
             size="small"
             variant="filled"
+            style={{width: 300}}
           >
             <MenuItem value={"1"}>Primer Grado</MenuItem>
             <MenuItem value={"2"}>Segundo Grado</MenuItem>
@@ -125,7 +126,7 @@ export const RegisterGrades = () => {
           </button>
         </div>
         <div className="datatable">
-          <div className="datatableTitle">
+          <div className="datatableTitle"  style={{width: 625, margin: "0 auto", marginTop: 21, marginBottom: 21}}>
             Grados a Procesar
             <Button variant="outlined" onClick={saveGrades}>
               Guardar
@@ -148,8 +149,8 @@ export const RegisterGrades = () => {
               }
             }}
             pageSizeOptions={[10, 50, 100]}
-            checkboxSelection
-            disableRowSelectionOnClick
+            style={{width: "50%", margin: "0 auto"}}
+            components={{ NoRowsOverlay: () => (<></>) }}
           />
         </div>
       </div>

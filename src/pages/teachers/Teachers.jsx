@@ -11,12 +11,10 @@ import HourglassDisabledOutlinedIcon from '@mui/icons-material/HourglassDisabled
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
 import { Tooltip } from "@mui/material";
 import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom'
-import { useAuth } from '../../context/AuthProvider'
+import { useNavigate } from 'react-router-dom'
+
 
 const Teachers = () => {
-
-  const { user, userType } = useAuth()
   const {
     getTeachers,
     teachers,
@@ -27,16 +25,27 @@ const Teachers = () => {
     removeClass
   } = useTeachers()
 
+  const navigate = useNavigate();
+
+
   const tableCols = [
     // { field: 'id', headerName: 'ID', width: 70 },
     {
       field: 'name', headerName: 'Nombre y Apellido', width: 200,
       renderCell: (params) => {
-        return (<Link to={`/teachers/${params.row._id}`}>{ params.row.name }</Link>)
+        return (<p>{ params.row.name }</p>)
       }
     },
     { field: 'email', headerName: 'Email', width: 200 },
+    ,
     {
+      field: 'habilitado', headerName: 'Estado', width: 100,
+      valueGetter: (params) => `${params.row.habilitado ? 'Activo' : 'Inactivo'}`
+    }
+  ];
+
+  if (teachers.length > 0 && !teachers[0].static){
+    tableCols.push({
       field: 'clases_asignadas',
       headerName: 'Clases Asignadas',
       width: 200,
@@ -47,18 +56,17 @@ const Teachers = () => {
           return <b>-Sin clases asignadas-</b>
         }
       }
-    },
-    {
-      field: 'habilitado', headerName: 'Estado', width: 100,
-      valueGetter: (params) => `${params.row.habilitado ? 'Activo' : 'Inactivo'}`
-    }
-  ];
+    })
+  } 
+
+
   const actionColumn = [
     {
       field: 'action',
       headerName: 'Opciones',
       width: 200,
       renderCell: (params) => {
+
         return (
           <div className="cellActions">
             {
@@ -74,12 +82,12 @@ const Teachers = () => {
                   </Tooltip>
                 </div>)
             }
-            <div className="viewButton" onClick={() => _assignClass(params.row._id)}>
+            {params.row.clases_asignadas.length == 0 && !params.row.static && <div className="viewButton" onClick={() => _assignClass(params.row._id)}>
               <Tooltip title="Asignar Clase">
                 <HourglassEmptyOutlinedIcon />
               </Tooltip>
-            </div>
-            {params.row.section && (<div className="viewButton" onClick={() => _removeClass(params.row._id)}>
+            </div>}
+            {params.row.clases_asignadas.length > 0 && !params.row.static && (<div className="viewButton" onClick={() => _removeClass(params.row._id, params.row.clases_asignadas[0]._id)}>
               <Tooltip title="Retirar Clase">
                 <HourglassDisabledOutlinedIcon />
               </Tooltip>
@@ -115,8 +123,29 @@ const Teachers = () => {
   const _assignClass = async (value) => {
     const { value: data } = await Swal.fire({
       title: 'Asignar clase',
-      html: `<label>Grado: </label><input type="number" id="grado" class="swal2-input" step="1" required><br>
-      <label>Sección: </label><input type="text" id="seccion" class="swal2-input" required>`,
+      html: `
+      <label>Grado: </label>
+      <select default="1" id="grado" required style="padding:15px; width: 285px; margin: 20.25px 40.25px 3px 50.25px; border: 1px solid #ddd; border-radius: 3px; font-size: 1.125rem; color: inherit">
+        <option value="1">Primer Grado</option>
+        <option value="2">Segundo Grado</option>
+        <option value="3">Tercero Grado</option>
+        <option value="4">Cuarto Grado</option>
+        <option value="5">Quinto Grado</option>
+        <option value="6">Sexto Grado</option>
+      </select>
+      <br/>
+      
+      <label>Sección: </label>
+      <select default="a" id="seccion" required style="padding:15px; width: 285px; margin: 20.25px 40.25px 3px 40.25px; border: 1px solid #ddd; border-radius: 3px; font-size: 1.125rem; color: inherit">
+        <option value="a">Sección A</option>
+        <option value="b">Sección B</option>
+        <option value="c">Sección C</option>
+        <option value="d">Sección D</option>
+        <option value="e">Sección E</option>
+      </select>
+      <br/>
+
+      `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Procesar",
@@ -132,11 +161,12 @@ const Teachers = () => {
 
     if (data && value) {
       const resp = await assignClass(value, data);
-      if(resp.error) Swal.fire("Error", resp.error, 'error');
+      if (resp.error) Swal.fire("Error", resp.error, 'error');
+      Swal.fire("Exito", "La clase ha sido añadida exitosamente", "success").then(() => navigate(0));;
     }
   }
 
-  const _removeClass = (id) => {
+  const _removeClass = (id, id_class) => {
     Swal.fire({
       title: 'Confirmar acción',
       text: "Confirme remover la sección del registro seleccionado",
@@ -147,8 +177,9 @@ const Teachers = () => {
       confirmButtonText: 'Confirmar',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const resp = await removeClass(id)
+        const resp = await removeClass(id, id_class)
         if(resp.error) Swal.fire("Error", resp.error, 'error');
+        Swal.fire("Exito", "La clase ha sido removida exitosamente", "success").then(() => navigate(0));        
       }
     })
   }

@@ -120,13 +120,13 @@ const Widget = ({ type, amount, onclick }) => {
                 <small>{lapse.grados.length > 0? "GRADOS:": "Sin datos"}</small>
                 <ul>
                   {lapse.grados.map(grade => (
-                    <li>
-                      <small>GRADO {grade.grado}</small>
+                    <li key={Math.random()}>
+                      <small key={Math.random()}>GRADO {grade.grado}</small>
                       <br/>
-                      {grade.secciones.length > 0? <small>SECCIONES:</small>: ""}
-                      <ul>
+                      {grade.secciones.length > 0? <small key={Math.random()}>SECCIONES:</small>: ""}
+                      <ul key={Math.random()}>
                         {grade.secciones.map(section => (
-                          <li>{section.seccion.toUpperCase()}</li>
+                          <li key={Math.random()}>{section.seccion.toUpperCase()}</li>
                         ))}
                       </ul>
                     </li>

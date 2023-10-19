@@ -29,27 +29,32 @@ const Students = () => {
     calificativoFinal
   } = useStudents();
 
-  const tableCols = [
+  const isStaticTable = (students[0] && students[0].static)
+
+  let tableCols = [
     // { field: 'id', headerName: 'ID', width: 70 },
     { field: "cedula_escolar", headerName: "Cédula Escolar", width: 130 },
     { field: "nombres", headerName: "Nombres", width: 150 },
     { field: "apellidos", headerName: "Apellidos", width: 150 },
-    { field: "grado", headerName: "Grado", width: 100 },
-    { field: "seccion", headerName: "Sección", width: 100 },
     //{ field: "año_escolar", headerName: "Año Escolar", width: 100 },
   ];
+
+  if (!isStaticTable) {
+    tableCols = tableCols.concat({ field: "grado", headerName: "Grado", width: 100 },
+    { field: "seccion", headerName: "Sección", width: 100 })
+  }
 
   const actionColumn = [
     {
       field: "action",
       headerName: "Opciones",
-      width: 300,
+      width: 400,
       renderCell: (params) => {
         return (
           <div className="cellActions">
             {(userType == "director" || userType == "administrador") && (
               <>
-                <div
+                {params.row.seccion && <div
                   className="viewButton"
                   onClick={() =>
                     _assignSection(
@@ -62,8 +67,8 @@ const Students = () => {
                   <Tooltip title="Cambiar Sección">
                     <HourglassEmptyOutlinedIcon />
                   </Tooltip>
-                </div>
-                {params.row.seccion !== "ninguno" && (
+                </div>}
+                {params.row.seccion && (
                   <div
                     className="deleteButton"
                     onClick={() =>
@@ -122,32 +127,41 @@ const Students = () => {
               </>
             )}
 
-            <Link
+            {!isStaticTable && <Link
               to={`${params.row._id}/boletin`}
               className="viewButton"
             >
               <Tooltip title="Boletín">
                 <SummarizeOutlinedIcon />
               </Tooltip>
-            </Link>
+            </Link>}
 
-            <Link
+            {!isStaticTable && <Link
               to={`${params.row._id}/informe`}
               className="viewButton"
             >
               <Tooltip title="Informe Descriptivo">
                 <SummarizeOutlinedIcon />
               </Tooltip>
-            </Link>
+            </Link>}
 
-            <Link
+            {!isStaticTable && <Link
               to={`${params.row._id}/constancia`}
               className="viewButton"
             >
               <Tooltip title="Constancia">
                 <SummarizeOutlinedIcon />
               </Tooltip>
-            </Link>
+            </Link>}
+
+            {!isStaticTable && <Link
+              to={`${params.row._id}/rasgos`}
+              className="viewButton"
+            >
+              <Tooltip title="Rasgos Personales">
+                <SummarizeOutlinedIcon />
+              </Tooltip>
+            </Link>}
           </div>
         );
       },
@@ -209,10 +223,10 @@ const Students = () => {
 
   const rasgo = (NombreRasgo, idRasgo) => {
     return `<div style="display: flex; justify-content: space-between; padding: 0 80px">
-    <small style="display: block"><strong>${NombreRasgo}:</strong></small>
+    <small style="display: block"><strong>${NombreRasgo ? NombreRasgo : ""}:</strong></small>
     <label for="${idRasgo}_verdadero"></label>
-    <input style="align-text: start" type="checkbox" id="${idRasgo}_verdadero" value="false" name="${NombreRasgo.toLowerCase()}" onclick="this.value = this.checked ? true : false">
-  </div>
+    <input style="align-text: start" type="checkbox" id="${idRasgo}_verdadero" value="false" name="${NombreRasgo ? NombreRasgo.toLowerCase() : ""}" onclick="this.value = this.checked ? true : false">
+    </div>
 
     `
   }
@@ -280,11 +294,24 @@ const Students = () => {
   const _assignSection = (id_rep, id_est, current) => {
     Swal.fire({
       title: "Ingrese la sección",
-      input: "text",
       inputValue: current,
       showCancelButton: true,
       confirmButtonText: "Actualizar",
       showLoaderOnConfirm: true,
+
+      html: `
+      <select default="a" id="seccion" required style="padding:15px; width: 285px; margin: 20.25px 40.25px 3px 40.25px; border: 1px solid #ddd; border-radius: 3px; font-size: 1.125rem; color: inherit">
+        <option value="a">Sección A</option>
+        <option value="b">Sección B</option>
+        <option value="c">Sección C</option>
+        <option value="d">Sección D</option>
+        <option value="e">Sección E</option>
+      </select>
+      <br/>
+      `,
+
+
+
       preConfirm: async (data) => {
         return await assignSection(id_rep, id_est, data);
       },
@@ -328,7 +355,7 @@ const Students = () => {
       <div className="listContainer">
         <Navbar />
         <DataTable
-          title={userType == "representante"? "Hijos": "Estudiantes"}
+          title={userType == "representante" ? "Hijos" : "Estudiantes"}
           tableCols={tableCols}
           tableRows={students}
           actionColumn={actionColumn}

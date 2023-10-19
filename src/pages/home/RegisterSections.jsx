@@ -108,6 +108,7 @@ export const RegisterSections = () => {
             variant="filled"
             onChange={changeSectionSelectHandler}
             value={sectionSelect}
+            style={{width: 300}}
           >
             <MenuItem value={"a"}>Sección A</MenuItem>
             <MenuItem value={"b"}>Sección B</MenuItem>
@@ -124,7 +125,7 @@ export const RegisterSections = () => {
         </div>
 
         <div className="datatable">
-          <div className="datatableTitle">
+          <div className="datatableTitle" style={{width: 625, margin: "0 auto", marginTop: 21, marginBottom: 21}}>
             Secciones a Procesar
             <Button variant="outlined" onClick={saveSections}>
               Guardar
@@ -147,8 +148,8 @@ export const RegisterSections = () => {
               }
             }}
             pageSizeOptions={[10, 50, 100]}
-            checkboxSelection
-            disableRowSelectionOnClick
+            style={{width: "50%", margin: "0 auto"}}
+            components={{ NoRowsOverlay: () => (<></>) }}
           />
         </div>
       </div>

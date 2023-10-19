@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import DataTable from '../../components/datatable/DataTable';
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
@@ -6,18 +6,19 @@ import { useRepresentants } from '../../context/RepresentantsContext';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddReactionOutlinedIcon from '@mui/icons-material/AddReactionOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { Tooltip } from "@mui/material";
+import { Tooltip, TextField } from "@mui/material";
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 
 const Representant = () => {
 
   const { getRepresentants, representants, deleteRepresentant } = useRepresentants()
+
   const tableCols = [
     // { field: 'id', headerName: 'ID', width: 70 },
     {
       field: 'name', headerName: 'Nombre y Apellido', width: 200,
-      renderCell: (params) => (<Link to={params.row._id}>{ params.value }</Link>)
+      renderCell: (params) => (<p>{ params.value }</p>)
     },
     { field: 'email', headerName: 'Email', width: 220 },
     {
@@ -68,7 +69,7 @@ const Representant = () => {
   const deleteRow = (id) => {
     Swal.fire({
       title: 'Eliminar registro',
-      text: "Confirme eliminar el registro seleccionado",
+      text: "Confirme eliminar el registro seleccionado. Si el representante tuvo hijos registrados en el periodo actual, los cambios se verán reflejados al iniciar nuevo lapso escolar",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -89,6 +90,8 @@ const Representant = () => {
   useEffect(() => {
     getRepresentants()
   }, [])
+
+  
 
   return (
     <div className='list' style={{display: "flex"}}>

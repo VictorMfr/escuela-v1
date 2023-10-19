@@ -1,4 +1,4 @@
-import logo from "../../assets/logo_escuela.png";
+import React, { useEffect } from "react";
 import {
   Document,
   Page,
@@ -7,19 +7,26 @@ import {
   StyleSheet,
   Image,
   PDFViewer,
+
 } from "@react-pdf/renderer";
-import { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import logo from "../../assets/logo_escuela.png";
 import { useStudents } from "../../context/StudentsContext";
-import { useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const styles = StyleSheet.create({
   page: {
     backgroundColor: "#ffffff",
-    padding: 20,
+    padding: 40,
   },
   title: {
     textAlign: "center",
     marginBottom: 20,
+  },
+  subtitle: {
+    textAlign: "center",
+    marginBottom: 20,
+    fontSize: 14
   },
   logo: {
     width: 100,
@@ -33,62 +40,92 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     textDecoration: "underline",
+    marginTop: 30
   },
   bodyText: {
     fontSize: 12,
     marginBottom: 5,
+  },
+  table: {
+    display: "table",
+    width: "100%",
+    borderCollapse: "collapse",
+  },
+  tableRow: {
+    margin: "auto",
+    flexDirection: "row",
+  },
+  tableCell: {
+    border: "1px solid #000",
+    padding: 5,
+  },
+  tableHeaderCell: {
+    backgroundColor: "#dcdcdc",
   },
 });
 
 const Boletin = () => {
   const { studentDynamicReport, getStudentBulletin } = useStudents();
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getStudentBulletin(id);
   }, []);
 
+  setTimeout(() => {
+    if (!data){
+      Swal.fire("Atención", "No hay informe cargado, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
+    }
+  }, 2000)
+
   const approvedQualifications = ["A", "B", "C", "D"];
 
-  const data = studentDynamicReport ? studentDynamicReport.datosBoletin : "";
+  const data = studentDynamicReport ? studentDynamicReport.datosBoletin : null;
 
   return (
     <PDFViewer style={{ width: "99%", height: "98vh" }}>
-      {data && <Document>
-        <Page size="Letter" style={styles.page}>
-          <View style={styles.title}>
-            <Image src={logo} style={styles.logo} />
-            <Text>República Bolivariana de Venezuela</Text>
-            <Text>Ministerio del Poder Popular para la Educación</Text>
-            <Text>E.B. República del Uruguay</Text>
-            <Text style={styles.heading}>INFORMACIÓN AL REPRESENTANTE</Text>
-          </View>
+      {data && data.literal_calificativo_final && (
+        <Document>
+          <Page size="Letter" style={styles.page}>
+            <View style={styles.title}><Image src={logo} style={styles.logo} /></View>
+            <View style={styles.title}>
+              
+              <Text>República Bolivariana de Venezuela</Text>
+              <Text>Ministerio del Poder Popular para la Educación</Text>
+              <Text>Inst. República del Urugay</Text>
+            </View>
 
-          <View style={styles.section}>
-            <Text style={styles.bodyText}>Alumno: {data.nombres} {data.apellidos}</Text>
-            <Text style={styles.bodyText}>Grado y Sección: {data.grado} {data.seccion}</Text>
-            <Text style={styles.bodyText}>Representante: {data.representante}</Text>
-            <Text style={styles.bodyText}>Dirección: {data.direccion}</Text>
-            <Text style={styles.bodyText}>Cédula Escolar: {data.cedula_escolar}</Text>
-            <Text style={styles.bodyText}>Año Escolar: {data.periodoEscolar}</Text>
-          </View>
+            <View style={{marginBottom: 40}}>
+              <Text style={styles.title}>BOLETIN ACADÉMICO</Text>
+              <Text style={styles.subtitle}>Período escolar: {data.periodoEscolar}</Text>
+            </View>
 
-          <View style={styles.section}>
+
+            <View style={styles.section}>
+              <Text style={styles.bodyText}>Nombre del Estudiante: {data.nombres} {data.apellidos}</Text>
+              <Text style={styles.bodyText}>Grado y Sección: {data.grado} {data.seccion.toUpperCase()}</Text>
+              <Text style={styles.bodyText}>Fecha de Emisión: {new Date().getDay()}/{new Date().getDate()}/{new Date().getFullYear()}</Text>
+              <Text style={styles.bodyText}>Literal Calificativo Final: {data.literal_calificativo_final}</Text>
+            </View>
+
+
             <Text style={styles.bodyText}>
-              El alumno {data.nombres} {data.apellidos}, natural de {data.direccion}, cursante de educación básica,
-              ha sido {approvedQualifications.includes(data.literal_calificativo_final)
-                ? `aprobado con literal calificativo ${data.literal_calificativo_final}`
-                : `reprobado con literal calificativo ${data.literal_calificativo_final}`}
+              Este boletín de calificaciones refleja el desempeño de {data.nombres} {data.apellidos} durante el período escolar {data.periodoEscolar}. Si tiene alguna pregunta o necesita más información, no dude en ponerse en contacto con {data.docente} en {data.docente_email}.
             </Text>
+
             <Text style={styles.bodyText}>
-              Docente de Grado: {data.docente}
+              Agradecemos su compromiso con la educación de su hijo(a) y esperamos ver mejoras continuas en el próximo período escolar. Atentamente, el Director {data.director} de la Institución Educativa
             </Text>
-            <Text style={styles.bodyText}>
-              Director: {data.director}
-            </Text>
-          </View>
-        </Page>
-      </Document>}
+
+            <View style={{...styles.section, marginTop: 40}} >
+              <Text style={styles.bodyText}>
+                Firma del Profesor: ___________________________
+              </Text>
+            </View>
+          </Page>
+        </Document>
+      )}
     </PDFViewer>
   );
 };

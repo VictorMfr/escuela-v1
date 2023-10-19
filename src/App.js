@@ -26,6 +26,7 @@ import Constancia from "./pages/students/Constancia"
 import Representant from "./pages/representant/Representants";
 import RepresentantsForm from "./pages/representant/RepresentantsForm";
 import RepresentantStudents from "./pages/representant/RepresentantStudents";
+import Rasgos from "./pages/students/Rasgos";
 
 const LazyHome = React.lazy(() => import("./pages/home/Home"));
 const LazyUsers = React.lazy(() => import("./pages/users/Users"));
@@ -45,6 +46,7 @@ const LazyInforme = React.lazy(() => import("./pages/students/Informe"));
 const LazyConstancia = React.lazy(() => import("./pages/students/Constancia"));
 const LazyViewUser = React.lazy(() => import("./pages/users/ViewUser"));
 const LazyViewTeacher = React.lazy(() => import("./pages/teachers/ViewTeacher"));
+
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -93,6 +95,7 @@ function App() {
                               <Route path=":id/boletin" element={<Boletin />}/>
                               <Route path=":id/informe" element={<Informe />} />
                               <Route path=":id/constancia" element={<Constancia />} />
+                              <Route path=":id/rasgos" element={<Rasgos />} />
                               
                               <Route path="create" element={<LazyStudentForm />} />
                               <Route path=":id_est/representants/:id_rep" element={<LazyStudentForm />} />
@@ -102,13 +105,13 @@ function App() {
                             <Route path="teachers">
                               <Route index element={<LazyTeachers />} />
                               <Route path=":id_teacher" element={<LazyViewTeacher />} />
-                              <Route path="create" element={<LazyCreateTeacher />} />
+                              <Route path="create" element={<LazyCreateTeacher title="Nuevo Docente"/>} />
                             </Route>
 
                             <Route path="users">
                               <Route index element={<LazyUsers />} />
-                              <Route path="create" element={<LazyCreateUser />} />
-                              <Route path="edit/:id_user" element={<LazyEditUser />} />
+                              <Route path="create" element={<LazyCreateUser title="Nuevo Administrador"/>} />
+                              <Route path="edit/:id_user" element={<LazyEditUser title="Modificar Administrador"/>} />
                               <Route path=":id_user" element={<LazyViewUser />} />
                             </Route>
                           </Route>

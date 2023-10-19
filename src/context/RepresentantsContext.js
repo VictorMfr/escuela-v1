@@ -1,5 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { createRepresentantRequest, deleteRepresentantRequest, getRepresentantRequest, getRepresentantsRequest } from "../api/representants";
+import { createRepresentantRequest, deleteRepresentantRequest, getRepresentantRequest, getRepresentantsRequest, updateRepresentantRequest } from "../api/representants";
 import { useAuth } from "./AuthProvider";
 
 const RepresentantContext = createContext();
@@ -58,7 +58,16 @@ export function RepresentantProvider({ children }) {
       const resp = await getRepresentantRequest(user.token, id)
       if (resp.status === 200) return resp.data
     } catch (error) {
-      // console.log(error)
+      return error.response.data
+    }
+  }
+
+  const updateRepresentant = async (id, data) => {
+    try {
+      const resp = await updateRepresentantRequest(user.token, id, data)
+      console.log(resp)
+      if (resp.status === 200) return resp.data
+    } catch (error) {
       return error.response.data
     }
   }
@@ -71,7 +80,8 @@ export function RepresentantProvider({ children }) {
         getRepresentant,
         getRepresentants,
         deleteRepresentant,
-        createRepresentant
+        createRepresentant,
+        updateRepresentant
       }}>
       {children}
     </RepresentantContext.Provider>

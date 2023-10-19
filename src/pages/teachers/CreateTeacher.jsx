@@ -1,65 +1,83 @@
-import "./create-teacher.scss";
-import Sidebar from '../../components/sidebar/Sidebar';
-import Navbar from '../../components/navbar/Navbar';
+import Sidebar from '../../components/sidebar/Sidebar'
+import Navbar from '../../components/navbar/Navbar'
 import { useForm } from 'react-hook-form';
-import { useTeachers } from "../../context/TeachersContext";
-import { Link, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { useTeachers } from '../../context/TeachersContext';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import Classes from "./CreateTeacher.module.css";
+import LoadingModal from "../register/LoadingModal";
 
-const CreateTeacher = ({ inputs, title }) => {
-
-  const { register, handleSubmit } = useForm();
-  const { createTeacher } = useTeachers();
+const CreateTeacher = ({ title }) => {
+  const { register, setValue, handleSubmit } = useForm();
+  const { createTeacher, getTeacherById } = useTeachers();
   const navigate = useNavigate()
+  const { id } = useParams()
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      _getTeacher(id)
+    }
+  }, [])
+
+  const _getTeacher = async (Id) => {
+    const resp = await getTeacherById(Id)
+
+    setValue("name", resp.name);
+    setValue("email", resp.email);
+    
+    if (resp.error) Swal.fire('Error', resp.error, 'error').then(() => { window.history.back(); })
+  }
 
   const onSubmit = handleSubmit(async (data) => {
-    data.habilitado = true;
-    const res = await createTeacher(data)
-    if (res === true) {
-      navigate("/teachers")
-    } else {
-      console.log(res);
-      Swal.fire("Error en el proceso", res, "error");
-    }
+    setIsLoading(true)
+
+    
+      const res = await createTeacher(data)
+      if (res === true) {
+        navigate("/teachers")
+      } else {
+        Swal.fire("Error en el proceso", res, "error");
+      }
+    
+    setIsLoading(false)
   })
 
-  return (
-    <div className='new'>
-      <Sidebar />
-      <div className="newContainer">
-        <Navbar />
-        <div className="top">
-          <h1>Crear Nuevo Profesor</h1>
-          <Link to='/teachers' className="link">
-            Volver
-          </Link>
-        </div>
-        <div className="bottom">
-          <div className="right">
-            <form onSubmit={onSubmit}>
-              <div className="formInput">
-                <label htmlFor="name">Nombre</label>
-                <input type="text" {...register("name")} placeholder='...' autoFocus required />
-              </div>
-              <div className="formInput">
-                <label htmlFor="email">Email</label>
-                <input type="email" {...register("email")} placeholder="..." required />
-              </div>
-              
+  let optionalInputBasedOnFormType = (title == "Modificar Administrador");
 
-              <div className="formInput">
-                <label htmlFor="password">Contraseña</label>
-                <input type="password" {...register("password")} placeholder='...' required />
-              </div>
-              <div className="formInput">
-                <button>Guardar</button>
-              </div>
-            </form>
+  return (
+    <div className={Classes.screen}>
+      <Sidebar />
+      <div className={Classes.container}>
+        <Navbar />
+        <div>
+          <div className={Classes.top}>
+            <h1>{title}</h1>
+            <Link to='/teachers' className={Classes.backlink}>
+              Volver
+            </Link>
           </div>
+          <form onSubmit={onSubmit} className={Classes.teacherForm}>
+
+            <label htmlFor="name">Nombre</label>
+            <input type="text" {...register("name")} placeholder='Ingrese el nombre' autoFocus required={optionalInputBasedOnFormType} />
+
+            <label htmlFor="email">Email</label>
+            <input type="email" {...register("email")} placeholder="Ingrese el email" required={optionalInputBasedOnFormType} />
+
+            <label htmlFor="password">Contraseña</label>
+            <input type="password" {...register("password")} placeholder='Ingrese la contraseña' required={optionalInputBasedOnFormType} />
+
+            <div className={Classes.saveButton}>
+              <button>Guardar</button>
+            </div>
+          </form>
         </div>
+        <LoadingModal show={isLoading} />
       </div>
     </div>
   )
 }
 
-export default CreateTeacher
+export default CreateTeacher;

@@ -1,11 +1,12 @@
-import "./create-student.scss"
+import classes from "./CreateStudentForm.module.css";
 import Sidebar from '../../components/sidebar/Sidebar';
 import Navbar from '../../components/navbar/Navbar';
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useStudents } from '../../context/StudentsContext';
 import Swal from 'sweetalert2';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import LoadingModal from "../register/LoadingModal";
 
 const CreateStudent = () => {
 
@@ -13,6 +14,7 @@ const CreateStudent = () => {
   const { createStudent, editStudent, getStudent } = useStudents()
   const navigate = useNavigate()
   const params = useParams()
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (params.id_rep && params.id_est) {
@@ -33,6 +35,9 @@ const CreateStudent = () => {
   }
 
   const onSubmit = handleSubmit(async (data) => {
+
+    setIsLoading(true)
+
     const id_est = params.id_est
     const id_rep = params.id_rep
     if (id_est && id_rep) {
@@ -53,53 +58,60 @@ const CreateStudent = () => {
   })
 
   return (
-    <div className='new'>
+    <div className={classes.screen}>
       <Sidebar />
-      <div className="newContainer">
+      <div className={classes.container}>
         <Navbar />
-        <div className="top">
+        <div className={classes.top}>
           <h1>{(params.id_est) ? 'Modificar Estudiante' : 'Agregar Estudiante Nuevo'}</h1>
-          <Link to={(params.id_est) ? '/students' : '/representants'} className="link">
+          <Link to={(params.id_est) ? '/students' : '/representants'} className={classes.backlink}>
             Regresar
           </Link>
         </div>
         <div className="bottom">
-          <div className="right">
-            <form onSubmit={onSubmit}>
-              <div className="formInput">
-                <label htmlFor="nombres">Nombres</label>
-                <input type="text" required {...register('nombres')} placeholder="..." autoFocus />
+          <div className="right" >
+            <form onSubmit={onSubmit}  className={classes.representantAddStudentForm}>
+              <div className={classes.representantAddStudentFormDisplay}>
+                <div>
+                  <div className="formInput">
+                    <label htmlFor="nombres">Nombres</label>
+                    <input type="text" required {...register('nombres')} placeholder="Ingrese los nombres" autoFocus />
+                  </div>
+                  <div className="formInput">
+                    <label htmlFor="apellidos">Apellidos</label>
+                    <input type="text" required {...register('apellidos')} placeholder="Ingrese los apellidos" />
+                  </div>
+                  <div className="formInput">
+                    <label htmlFor="fecha_de_nacimiento">Fecha de Nacimiento</label>
+                    <input type="date" required {...register('fecha_de_nacimiento')} placeholder="Ingrese la fecha de nacimiento" />
+                  </div>
+                  <div className="formInput">
+                    <label htmlFor="edad">Edad</label>
+                    <input type="text" required {...register('edad')} placeholder="Ingrese la edad" />
+                  </div>
+                </div>
+                <div>
+                  <div className="formInput">
+                    <label htmlFor="direccion">Dirección</label>
+                    <input type="text" required {...register('direccion')} placeholder="Ingrese la dirección" />
+                  </div>
+                  <div className="formInput">
+                    <label htmlFor="cedula_escolar">Cédula Escolar</label>
+                    <input type="text" required {...register('cedula_escolar')} placeholder="Ingrese la cédula escolar" />
+                  </div>
+                  <div className="formInput">
+                    <label htmlFor="año_escolar">Año Escolar</label>
+                    <input type="text" required {...register('año_escolar')} placeholder="Ingrese el año escolar" />
+                  </div>
+                </div>
               </div>
-              <div className="formInput">
-                <label htmlFor="apellidos">Apellidos</label>
-                <input type="text" required {...register('apellidos')} placeholder="..." />
-              </div>
-              <div className="formInput">
-                <label htmlFor="fecha_de_nacimiento">Fecha de Nacimiento</label>
-                <input type="date" required {...register('fecha_de_nacimiento')} placeholder="..." />
-              </div>
-              <div className="formInput">
-                <label htmlFor="edad">Edad</label>
-                <input type="text" required {...register('edad')} placeholder="..." />
-              </div>
-              <div className="formInput">
-                <label htmlFor="direccion">Dirección</label>
-                <input type="text" required {...register('direccion')} placeholder="..." />
-              </div>
-              <div className="formInput">
-                <label htmlFor="cedula_escolar">Cédula Escolar</label>
-                <input type="text" required {...register('cedula_escolar')} placeholder="..." />
-              </div>
-              <div className="formInput">
-                <label htmlFor="año_escolar">Año Escolar</label>
-                <input type="text" required {...register('año_escolar')} placeholder="..." />
-              </div>
-              <div className="formInput">
+              <div className={classes.saveButton}>
                 <button>Guardar</button>
               </div>
             </form>
           </div>
         </div>
+        <LoadingModal show={isLoading} />
       </div>
     </div>
   )

@@ -12,6 +12,7 @@ import {
   setFinalQualifierStudentRequest,
   setInformStudentRequest,
   setStudentPersonalTraitsRequest,
+  getStudentPersonalTraitsRequest,
   getStudentProofRequest
 } from "../api/students";
 import { useAuth } from "./AuthProvider";
@@ -44,7 +45,8 @@ export function StudentProvider({ children }) {
       else throw new Error(res.data.error);
     } catch (error) {
       console.log(error);
-      return error.response.data;
+
+      return (error.response)? error.response.data: error;
     }
   };
 
@@ -245,7 +247,7 @@ export function StudentProvider({ children }) {
   // Obtener rasgos Personales del Estudiantes
   const getStudentPersonalTraits = async (id) => {
     try {
-      const res = await getStudentPersonalTraits(user.token, id);
+      const res = await getStudentPersonalTraitsRequest(user.token, id);
       setStudentDynamicReport(res.data.message)
     } catch (error) {
       console.log(error);
@@ -281,7 +283,7 @@ export function StudentProvider({ children }) {
         getStudentBulletin,
         getStudentPersonalTraits,
         getStudentReport,
-        getStudentProof
+        getStudentProof,
       }}
     >
       {children}

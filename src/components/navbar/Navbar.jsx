@@ -30,8 +30,6 @@ const Navbar = () => {
     <div className='navbar'>
       <div className="wrapper">
         <div className="items">
-          <div className="item">
-          </div>
           <div className="item" onClick={handleLogout}>
             <Tooltip title="Cerrar Sesión">
               <LogoutOutlinedIcon className="icon" />
