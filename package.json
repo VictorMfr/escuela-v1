@@ -1,6 +1,7 @@
 {
   "name": "escuela",
   "version": "0.1.0",
+  "proxy": "https://school-rest-api-git-master-victormfr.vercel.app",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -48,6 +49,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://school-rest-api-git-master-victormfr.vercel.app/"
+  }
 }
