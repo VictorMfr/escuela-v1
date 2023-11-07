@@ -129,7 +129,7 @@ const Rasgos = () => {
             <View style={{ ...styles.body, marginBottom: 20 }}>
               <Text style={styles.bodyText}>ÁREAS DE MEJORA:</Text>
               <Text style={{ ...styles.bodyText, marginBottom: 20 }}>A pesar de los rasgos positivos, el estudiante también presenta áreas de mejora en su desarrollo personal. Estas áreas incluyen:</Text>
-              {rasgosPositivos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}._ {rasgo}</Text>)}
+              {rasgosNegativos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}._ {rasgo}</Text>)}
             </View>
 
             <View style={styles.body}>
