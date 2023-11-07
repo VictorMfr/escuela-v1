@@ -77,10 +77,9 @@ export function StudentProvider({ children }) {
     }
   };
 
-  const getStudentsByRepresentant = async (id) => {
+  const getStudentsByRepresentant = async () => {
     try {
-      const res = await getStudentsByRepresentantRequest(user.token, id);
-      console.log(res)
+      const res = await getStudentsByRepresentantRequest(user.token);
       setStudents(res.data ? res.data.message : []);
     } catch (error) {
       console.log(error);

@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 });
 
 const Boletin = () => {
-  const { studentDynamicReport, getStudentBulletin, IsDynamicReportLoading } = useStudents();
+  const { studentDynamicReport, getStudentBulletin } = useStudents();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -75,8 +75,6 @@ const Boletin = () => {
 
     checkIfData()
   }, []);
-
-
 
 
   return (
