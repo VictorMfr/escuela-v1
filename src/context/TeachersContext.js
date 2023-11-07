@@ -8,7 +8,6 @@ import {
   removeClassRequest,
   assignClassRequest,
   proyectoEscolarRequest,
-  informeDescriptivoRequest,
   getTeacherRequest
 } from "../api/teachers";
 import { useAuth } from "./AuthProvider";
@@ -83,8 +82,11 @@ export function TeacherProvider({ children }) {
   };
 
   // Eliminar
-  const deleteTeacher = async (id) => {
+  const deleteTeacher = async (id, id_class) => {
     try {
+      if (id_class) {
+        removeClass(id, id_class)
+      }
       const res = await deleteTeacherRequest(user.token, id);
       if (res.status === 200) getTeachers();
     } catch (error) {
@@ -119,15 +121,6 @@ export function TeacherProvider({ children }) {
     try {
       const res = await getTeacherRequest(user.token, id);
       setTeacherInfo(res.data)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const informeDescriptivo = async (id_student, data) => {
-    try {
-      const res = await informeDescriptivoRequest(user.token, id_student, data);
-      if (res.status === 200) return res.data;
     } catch (error) {
       console.log(error)
     }

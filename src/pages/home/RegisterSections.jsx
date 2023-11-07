@@ -10,7 +10,7 @@ import { Tooltip, Button, Select, MenuItem } from "@mui/material"
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 
-export const RegisterSections = () => {
+const RegisterSections = () => {
   const navigate = useNavigate();
   const { addSections } = useDirectors();
 
@@ -156,3 +156,5 @@ export const RegisterSections = () => {
     </div>
   );
 };
+
+export default RegisterSections;

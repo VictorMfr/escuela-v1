@@ -1,14 +1,5 @@
 import React, { useEffect } from "react";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  PDFViewer,
-
-} from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
 import { useParams, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo_escuela.png";
 import { useStudents } from "../../context/StudentsContext";
@@ -65,23 +56,28 @@ const styles = StyleSheet.create({
 });
 
 const Boletin = () => {
-  const { studentDynamicReport, getStudentBulletin } = useStudents();
+  const { studentDynamicReport, getStudentBulletin, IsDynamicReportLoading } = useStudents();
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const data = studentDynamicReport ? studentDynamicReport.datosBoletin : null;
+
   useEffect(() => {
-    getStudentBulletin(id);
+    const checkIfData = async () => {
+      const dataRequest = await getStudentBulletin(id);
+
+      console.log(dataRequest)
+
+      if (!dataRequest || !dataRequest.datosBoletin.literal_calificativo_final) {
+        Swal.fire("Atención", "No hay datos cargados, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
+      }
+    }
+
+    checkIfData()
   }, []);
 
-  setTimeout(() => {
-    if (!data){
-      Swal.fire("Atención", "No hay informe cargado, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
-    }
-  }, 2000)
 
-  const approvedQualifications = ["A", "B", "C", "D"];
 
-  const data = studentDynamicReport ? studentDynamicReport.datosBoletin : null;
 
   return (
     <PDFViewer style={{ width: "99%", height: "98vh" }}>
@@ -90,13 +86,13 @@ const Boletin = () => {
           <Page size="Letter" style={styles.page}>
             <View style={styles.title}><Image src={logo} style={styles.logo} /></View>
             <View style={styles.title}>
-              
+
               <Text>República Bolivariana de Venezuela</Text>
               <Text>Ministerio del Poder Popular para la Educación</Text>
               <Text>Inst. República del Urugay</Text>
             </View>
 
-            <View style={{marginBottom: 40}}>
+            <View style={{ marginBottom: 40 }}>
               <Text style={styles.title}>BOLETIN ACADÉMICO</Text>
               <Text style={styles.subtitle}>Período escolar: {data.periodoEscolar}</Text>
             </View>
@@ -118,7 +114,7 @@ const Boletin = () => {
               Agradecemos su compromiso con la educación de su hijo(a) y esperamos ver mejoras continuas en el próximo período escolar. Atentamente, el Director {data.director} de la Institución Educativa
             </Text>
 
-            <View style={{...styles.section, marginTop: 40}} >
+            <View style={{ ...styles.section, marginTop: 40 }} >
               <Text style={styles.bodyText}>
                 Firma del Profesor: ___________________________
               </Text>

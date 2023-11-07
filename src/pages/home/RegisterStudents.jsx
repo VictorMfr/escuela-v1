@@ -12,7 +12,7 @@ import { useStudents } from '../../context/StudentsContext'
 import { useEffect } from "react";
 import "./home.scss"
 
-export const RegisterStudents = () => {
+const RegisterStudents = () => {
 
   const navigate = useNavigate();
   const [tableRows, setTableRows] = useState([])
@@ -235,3 +235,5 @@ export const RegisterStudents = () => {
     </div>
   );
 };
+
+export default RegisterStudents;

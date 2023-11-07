@@ -11,7 +11,6 @@ import HourglassDisabledOutlinedIcon from '@mui/icons-material/HourglassDisabled
 import HourglassEmptyOutlinedIcon from '@mui/icons-material/HourglassEmptyOutlined';
 import { Tooltip } from "@mui/material";
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom'
 
 
 const Teachers = () => {
@@ -24,8 +23,6 @@ const Teachers = () => {
     assignClass,
     removeClass
   } = useTeachers()
-
-  const navigate = useNavigate();
 
 
   const tableCols = [
@@ -93,7 +90,7 @@ const Teachers = () => {
               </Tooltip>
             </div>)}
 
-            <div className="deleteButton" onClick={() => deleteRow(params.row._id)}>
+            <div className="deleteButton" onClick={() => deleteRow(params.row._id, params.row.clases_asignadas && params.row.clases_asignadas[0] && params.row.clases_asignadas[0]._id? params.row.clases_asignadas[0]._id: undefined)}>
               <Tooltip title="Eliminar">
                 <DeleteOutlineOutlinedIcon />
               </Tooltip>
@@ -104,7 +101,7 @@ const Teachers = () => {
     }
   ]
 
-  const deleteRow = (id) => {
+  const deleteRow = (id, id_class) => {
     Swal.fire({
       title: 'Eliminar registro',
       text: "Confirme eliminar el registro seleccionado",
@@ -115,7 +112,7 @@ const Teachers = () => {
       confirmButtonText: 'Confirmar',
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteTeacher(id)
+        deleteTeacher(id, id_class)
       }
     })
   }
@@ -162,7 +159,7 @@ const Teachers = () => {
     if (data && value) {
       const resp = await assignClass(value, data);
       if (resp.error) Swal.fire("Error", resp.error, 'error');
-      Swal.fire("Exito", "La clase ha sido añadida exitosamente", "success").then(() => navigate(0));;
+      Swal.fire("Exito", "La clase ha sido añadida exitosamente", "success").then(() => getTeachers());;
     }
   }
 
@@ -179,7 +176,7 @@ const Teachers = () => {
       if (result.isConfirmed) {
         const resp = await removeClass(id, id_class)
         if(resp.error) Swal.fire("Error", resp.error, 'error');
-        Swal.fire("Exito", "La clase ha sido removida exitosamente", "success").then(() => navigate(0));        
+        Swal.fire("Exito", "La clase ha sido removida exitosamente", "success").then(() => getTeachers());        
       }
     })
   }

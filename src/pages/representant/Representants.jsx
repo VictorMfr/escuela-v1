@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import DataTable from '../../components/datatable/DataTable';
 import Navbar from '../../components/navbar/Navbar';
 import Sidebar from '../../components/sidebar/Sidebar';
@@ -6,7 +6,7 @@ import { useRepresentants } from '../../context/RepresentantsContext';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddReactionOutlinedIcon from '@mui/icons-material/AddReactionOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import { Tooltip, TextField } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import Swal from 'sweetalert2';
 import { Link } from 'react-router-dom';
 
@@ -61,10 +61,6 @@ const Representant = () => {
       }
     }
   ]
-
-  const addStudent = (id) => {
-    alert(id)
-  }
 
   const deleteRow = (id) => {
     Swal.fire({

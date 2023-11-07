@@ -1,14 +1,6 @@
 import logo from "../../assets/logo_escuela.png";
-import { useParams, useNavigate, Navigate } from "react-router-dom";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  PDFViewer,
-} from "@react-pdf/renderer";
+import { useParams, useNavigate } from "react-router-dom";
+import { Document, Page, Text, View, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
 import { useEffect } from "react";
 import { useStudents } from "../../context/StudentsContext";
 import Swal from "sweetalert2";
@@ -71,12 +63,18 @@ const Rasgos = () => {
   const { id } = useParams();
 
   useEffect(() => {
-    getStudentPersonalTraits(id);
+    const checkIfData = async () => {
+      const dataRequest = await getStudentPersonalTraits(id);
+
+      if (!dataRequest || dataRequest.datosRasgos.rasgos != {}) {
+        Swal.fire("Atención", "No hay datos cargados, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
+      }
+    }
+
+    checkIfData()
   }, []);
 
   const data = studentDynamicReport ? studentDynamicReport.datosRasgos : "";
-
-  const approvedQualifications = ["A", "B", "C", "D"];
 
   let rasgosPositivos = [];
   let rasgosNegativos = [];
@@ -97,16 +95,9 @@ const Rasgos = () => {
     })
   }
 
-  setTimeout(() => {
-    if (!data){
-      Swal.fire("Atención", "No hay informe cargado, , espera a que el docente lo cargue", "warning").then(() => navigate(-1))
-    }
-  }, 2000)
-
-
   return (
     <PDFViewer style={{ width: "99%", height: "98vh" }}>
-      {data && (
+      {data && data.rasgos && (
         <Document>
           <Page size="Letter" style={styles.page}>
             <View style={styles.title}>
@@ -129,16 +120,16 @@ const Rasgos = () => {
               </Text>
             </View>
 
-            <View style={{...styles.body, marginBottom: 20}}>
-              <Text style={{...styles.bodyText, marginTop:20}}>ASPECTOS POSITIVOS:</Text>
-              <Text style={{...styles.bodyText, marginBottom: 20}}>El estudiante presenta una serie de rasgos personales positivos que merecen ser destacados. Entre ellos, se incluyen:</Text>
-              {rasgosPositivos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index +1}._ {rasgo}</Text>)}
+            <View style={{ ...styles.body, marginBottom: 20 }}>
+              <Text style={{ ...styles.bodyText, marginTop: 20 }}>ASPECTOS POSITIVOS:</Text>
+              <Text style={{ ...styles.bodyText, marginBottom: 20 }}>El estudiante presenta una serie de rasgos personales positivos que merecen ser destacados. Entre ellos, se incluyen:</Text>
+              {rasgosPositivos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}._ {rasgo}</Text>)}
             </View>
 
-            <View style={{...styles.body, marginBottom: 20}}>
+            <View style={{ ...styles.body, marginBottom: 20 }}>
               <Text style={styles.bodyText}>ÁREAS DE MEJORA:</Text>
-              <Text style={{...styles.bodyText, marginBottom: 20}}>A pesar de los rasgos positivos, el estudiante también presenta áreas de mejora en su desarrollo personal. Estas áreas incluyen:</Text>
-              {rasgosPositivos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index +1}._ {rasgo}</Text>)}
+              <Text style={{ ...styles.bodyText, marginBottom: 20 }}>A pesar de los rasgos positivos, el estudiante también presenta áreas de mejora en su desarrollo personal. Estas áreas incluyen:</Text>
+              {rasgosPositivos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}._ {rasgo}</Text>)}
             </View>
 
             <View style={styles.body}>
@@ -151,7 +142,7 @@ const Rasgos = () => {
               </Text>
             </View>
 
-            <View style={{...styles.body, marginTop: 20}}>
+            <View style={{ ...styles.body, marginTop: 20 }}>
               <Text style={styles.bodyText}>Firma del Docente: ________________________________</Text>
               <Text style={styles.bodyText}>Nombre del Docente: {data.docente}</Text>
               <Text style={styles.bodyText}>Fecha: {new Date().getDay()}/{new Date().getDate()}/{new Date().getFullYear()}</Text>

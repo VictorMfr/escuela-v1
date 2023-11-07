@@ -31,6 +31,7 @@ export const useStudents = () => {
 
 export function StudentProvider({ children }) {
   const [students, setStudents] = useState([]);
+  const [IsDynamicReportLoading, setIsDynamicReportLoading] = useState(false);
 
   // Student-Related Reports
   const [studentDynamicReport, setStudentDynamicReport] = useState();
@@ -46,7 +47,7 @@ export function StudentProvider({ children }) {
     } catch (error) {
       console.log(error);
 
-      return (error.response)? error.response.data: error;
+      return (error.response) ? error.response.data : error;
     }
   };
 
@@ -79,7 +80,8 @@ export function StudentProvider({ children }) {
   const getStudentsByRepresentant = async (id) => {
     try {
       const res = await getStudentsByRepresentantRequest(user.token, id);
-      setStudents(res.data? res.data.message : []);
+      console.log(res)
+      setStudents(res.data ? res.data.message : []);
     } catch (error) {
       console.log(error);
     }
@@ -227,8 +229,11 @@ export function StudentProvider({ children }) {
   // Obtener Boletin del estudiante
   const getStudentBulletin = async (id) => {
     try {
+      setIsDynamicReportLoading(true)
       const res = await getStudentNotesRequest(user.token, id);
       setStudentDynamicReport(res.data.message)
+      setIsDynamicReportLoading(false)
+      return res.data.message
     } catch (error) {
       console.log(error);
     }
@@ -237,8 +242,11 @@ export function StudentProvider({ children }) {
   // Obtener Informe Descriptivo del estudiante
   const getStudentReport = async (id) => {
     try {
+      setIsDynamicReportLoading(true)
       const res = await getStudentDescriptiveReportRequest(user.token, id);
       setStudentDynamicReport(res.data.message)
+      setIsDynamicReportLoading(false)
+      return res.data.message
     } catch (error) {
       console.log(error);
     }
@@ -247,8 +255,11 @@ export function StudentProvider({ children }) {
   // Obtener rasgos Personales del Estudiantes
   const getStudentPersonalTraits = async (id) => {
     try {
+      setIsDynamicReportLoading(true)
       const res = await getStudentPersonalTraitsRequest(user.token, id);
       setStudentDynamicReport(res.data.message)
+      setIsDynamicReportLoading(false)
+      return res.data.message
     } catch (error) {
       console.log(error);
     }
@@ -256,8 +267,11 @@ export function StudentProvider({ children }) {
 
   const getStudentProof = async (id) => {
     try {
+      setIsDynamicReportLoading(true)
       const res = await getStudentProofRequest(user.token, id);
       setStudentDynamicReport(res.data.message)
+      setIsDynamicReportLoading(false)
+      return res.data.message
     } catch (error) {
       console.log(error);
     }
@@ -284,6 +298,8 @@ export function StudentProvider({ children }) {
         getStudentPersonalTraits,
         getStudentReport,
         getStudentProof,
+        IsDynamicReportLoading,
+        setIsDynamicReportLoading
       }}
     >
       {children}

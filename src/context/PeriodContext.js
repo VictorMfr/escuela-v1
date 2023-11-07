@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { getPeriodRequest, getLapseRequest } from "../api/period";
 import { useAuth } from "./AuthProvider";
 
@@ -27,8 +27,6 @@ export const PeriodProvider = ({ children }) => {
         const res = await getLapseRequest(user.token)
         setLapse(res.data)
     }
-
-
 
 
     return (

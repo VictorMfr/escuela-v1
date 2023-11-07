@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useAuth } from "./AuthProvider";
 import { addGradeRequest, addSectionsRequest, addStudentsRequest, createLapseRequest, createPeriodRequest } from "../api/director";
 

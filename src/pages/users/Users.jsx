@@ -9,7 +9,6 @@ import ToggleOffOutlinedIcon from '@mui/icons-material/ToggleOffOutlined';
 import ToggleOnOutlinedIcon from '@mui/icons-material/ToggleOnOutlined';
 import { Tooltip } from "@mui/material";
 import Swal from 'sweetalert2';
-import { Link } from "react-router-dom";
 
 const Users = () => {
 

@@ -1,13 +1,5 @@
 import logo from "../../assets/logo_escuela.png";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  PDFViewer,
-} from "@react-pdf/renderer";
+import { Document, Page, Text, View, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
 import { useEffect } from "react";
 import { useStudents } from "../../context/StudentsContext";
 import { useParams, useNavigate } from "react-router-dom";
@@ -66,24 +58,24 @@ const styles = StyleSheet.create({
 });
 
 const Constancia = () => {
-  const { studentDynamicReport, getStudentProof } = useStudents();
+  const { studentDynamicReport, getStudentProof, IsDynamicReportLoading } = useStudents();
   const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
-    getStudentProof(id);
+    const checkIfData = async () => {
+      const dataRequest = await getStudentProof(id);
+
+      if (!dataRequest) {
+        Swal.fire("Atención", "No hay datos cargados, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
+      }
+    }
+
+    checkIfData()
   }, []);
 
 
-  setTimeout(() => {
-    if (!data){
-      Swal.fire("Atención", "No hay informe cargado, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
-    }
-  }, 2000)
-
   const data = studentDynamicReport ? studentDynamicReport.datosConstancia : "";
-
-  const approvedQualifications = ["A", "B", "C", "D"];
 
   return (
     <PDFViewer style={{ width: "99%", height: "99vh" }}>
@@ -100,7 +92,7 @@ const Constancia = () => {
 
             <View style={styles.section}>
               <Text style={styles.bodyText}>
-                La Institución E.B. República del Uruguay, ubicada en /dirección/, por medio de la presente, certificamos que el/la estudiante {data.nombres} {data.apellidos}, de cédula escolar {data.cedula_escolar}. Está actualmente inscrito/a y cursando el año académico {data.periodoEscolar} en nuestro plantel educativo.
+                La Institución E.B. República del Uruguay, por medio de la presente, certificamos que el/la estudiante {data.nombres} {data.apellidos}, de cédula escolar {data.cedula_escolar}. Está actualmente inscrito/a y cursando el año académico {data.periodoEscolar} en nuestro plantel educativo.
               </Text>
             </View>
 
@@ -117,16 +109,16 @@ const Constancia = () => {
             </View>
 
             <View style={styles.section}>
-              <Text style={{...styles.bodyText, marginTop: 30, marginBottom: 30}}>
+              <Text style={{ ...styles.bodyText, marginTop: 30, marginBottom: 30 }}>
                 Atentamente, el Director/a {data.director}
               </Text>
-              <Text style={{...styles.bodyText, marginTop: 30, textAlign: "center"}}>
+              <Text style={{ ...styles.bodyText, marginTop: 30, textAlign: "center" }}>
                 ____________________________
               </Text>
-              <Text style={{...styles.bodyText, marginTop: 30, marginBottom: 30, textAlign: "center"}}>
-                Firma del Director 
+              <Text style={{ ...styles.bodyText, marginTop: 30, marginBottom: 30, textAlign: "center" }}>
+                Firma del Director
               </Text>
-              <Text style={{...styles.bodyText, marginTop: 40, marginBottom: 30}}>
+              <Text style={{ ...styles.bodyText, marginTop: 40, marginBottom: 30 }}>
                 Fecha de Emisión: {new Date().getDay()}/{new Date().getDate()}/{new Date().getFullYear()}
               </Text>
             </View>

@@ -7,15 +7,10 @@ import {
   StyleSheet,
   Image,
 } from "@react-pdf/renderer";
-import axios from "../../api/axios";
-import { getStudentDescriptiveReportRequest } from "../../api/students";
 import Swal from "sweetalert2";
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { PDFViewer } from "@react-pdf/renderer";
-import { useAuth } from "../../context/AuthProvider";
-import { usePeriod } from "../../context/PeriodContext";
-import { useTeachers } from "../../context/TeachersContext";
 import { useStudents } from "../../context/StudentsContext";
 import logo from "../../assets/logo_escuela.png";
 
@@ -73,29 +68,24 @@ const styles = StyleSheet.create({
 
 const Informe = () => {
 
-  const { studentDynamicReport, getStudentReport } = useStudents();
+  const { studentDynamicReport, getStudentReport, IsDynamicReportLoading } = useStudents();
   const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
-    getStudentReport(id);
+    const checkIfData = async () => {
+      const dataRequest = await getStudentReport(id);
+
+      if (!dataRequest || !dataRequest.datosInforme.informe_descriptivo) {
+        Swal.fire("Atención", "No hay datos cargados, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
+      }
+    }
+
+    checkIfData()
   }, []);
 
   const data = studentDynamicReport ? studentDynamicReport.datosInforme : "";
 
-  if (studentDynamicReport && !studentDynamicReport.datosConstancia && !studentDynamicReport.datosBoletin) {
-    if (!studentDynamicReport.datosInforme || !data.informe_descriptivo) {
-      Swal.fire("Atención", "El Estudiante no tiene un boletin cargado todavía", "warning").then(() => {
-        navigate(-1)
-      });
-    }
-  }
-
-  setTimeout(() => {
-    if (!data){
-      Swal.fire("Atención", "No hay informe cargado, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
-    }
-  }, 2000)
 
   return (
     <>
@@ -111,7 +101,7 @@ const Informe = () => {
               <Text>Inst. República del Urugay</Text>
             </View>
 
-            <View style={{marginBottom: 40}}>
+            <View style={{ marginBottom: 40 }}>
               <Text style={styles.title}>Informe Descriptivo</Text>
               <Text style={styles.subtitle}>Período escolar: {data.periodoEscolar}</Text>
             </View>
@@ -124,9 +114,9 @@ const Informe = () => {
               <Text style={styles.bodyText}>Director: {data.director}</Text>
             </View>
 
-            
 
-            <View style={{...styles.body, marginTop: 30, marginBottom: 30}}>
+
+            <View style={{ ...styles.body, marginTop: 30, marginBottom: 30 }}>
               <Text style={styles.bodyText}>
                 {data.informe_descriptivo}
               </Text>

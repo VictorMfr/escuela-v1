@@ -1,6 +1,4 @@
 import "./navbar.scss";
-import { useContext } from "react";
-import { DarkModeContext } from "../../context/darkModeContext";
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { Tooltip } from "@mui/material";
 import { useAuth } from '../../context/AuthProvider';

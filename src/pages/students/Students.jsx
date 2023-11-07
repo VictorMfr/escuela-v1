@@ -14,9 +14,10 @@ import SummarizeOutlinedIcon from '@mui/icons-material/SummarizeOutlined';
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
+import React from "react"
 
 const Students = () => {
-  const { user, userType } = useAuth();
+  const { userType } = useAuth();
   const {
     getStudents,
     getStudentsByTeacher,
@@ -311,15 +312,14 @@ const Students = () => {
       `,
 
 
-
-      preConfirm: async (data) => {
+      preConfirm: async () => {
+        const data = document.getElementById("seccion").value;
+        console.log("hey")
         return await assignSection(id_rep, id_est, data);
       },
-      allowOutsideClick: () => !Swal.isLoading(),
-    }).then((result) => {
-      if (result === true) {
-        Swal.close();
-      }
+      
+    }).then(() => {
+        Swal.fire("Exito", "Se ha movido de sección exitosamente", "success").then(() => Swal.close());
     });
   };
 
@@ -334,7 +334,8 @@ const Students = () => {
       confirmButtonText: "Confirmar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        removeSection(id_rep, id_est);
+        removeSection(id_rep, id_est); 
+        Swal.fire("Exito", "Se ha removido de sección exitosamente", "success").then(() => Swal.close());
       }
     });
   };

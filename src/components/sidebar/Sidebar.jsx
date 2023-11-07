@@ -5,15 +5,11 @@ import SchoolIcon from '@mui/icons-material/School';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined';
 import { Link } from 'react-router-dom';
-import { useContext } from "react";
-import { DarkModeContext } from "../../context/darkModeContext";
 import { useAuth } from "../../context/AuthProvider";
 import logo from "../../assets/logo_escuela.png";
 
 const Sidebar = () => {
-
-  const { dispatch } = useContext(DarkModeContext)
-  const { user, userType } = useAuth()
+  const { userType } = useAuth()
 
   return (
     <div className="sidebar">

@@ -140,7 +140,7 @@ const Widget = ({ type, amount, onclick }) => {
         
         {data.link && <button className="link" onClick={onclick} style={{marginTop: data.amount? 21: 0}}>{data.link}</button>}
         {data.title == "INFORMACIÓN DEL PERIODO" && !data.amount && <p>No hay datos</p>}
-        {data.title == "INFORMACIÓN DEL PERIODO" && data.amount == "" && <p>No hay datos en el periodo</p>}
+        {data.title == "INFORMACIÓN DEL PERIODO" && data.amount && data.amount == "" && <p>No hay datos en el periodo</p>}
       </div>
     </div>
   )

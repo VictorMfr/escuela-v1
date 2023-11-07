@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 
-export const RegisterGrades = () => {
+const RegisterGrades = () => {
   const navigate = useNavigate();
   const { addGrades } = useDirectors();
 
@@ -157,3 +157,5 @@ export const RegisterGrades = () => {
     </div>
   );
 };
+
+export default RegisterGrades;

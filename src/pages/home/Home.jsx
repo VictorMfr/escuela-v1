@@ -21,13 +21,15 @@ const Home = () => {
   const { period, lapse, getPeriod, getLapse } = usePeriod();
   const { users, getUsers } = useUsers();
   const { representants, getRepresentants } = useRepresentants();
-  const { addPeriod, addLapse, addGrades, addSection } = useDirectors();
-  const { userType, user } = useAuth();
-  const navigate = useNavigate();
+  const { addPeriod, addLapse} = useDirectors();
+  const { userType } = useAuth();
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     getTeachers();
-    getStudents();
+    if (userType != "profesor" && userType !="representante") {
+      getStudents();
+    } 
     getUsers();
     getPeriod();
     getLapse();
@@ -61,13 +63,12 @@ const Home = () => {
     if (data) {
       const resp = await addPeriod(data);
       Swal.fire(resp.title, resp.text, resp.type).then(() => {
-        navigate(0)
+        getPeriod()
       });
     }
   };
 
   const _addLapse = async () => {
-    const newLapse = lapse.lapso + 1;
 
     const { value: data } = await Swal.fire({
       title: "Ingrese los datos solicitados:",
@@ -87,15 +88,15 @@ const Home = () => {
     });
 
     if (data) {
-      console.log(data)
       const resp = await addLapse(data);
       Swal.fire(resp.title, resp.text, resp.type).then(() => {
-        navigate(0)
+        getPeriod();
+        getLapse();
       });
     }
   }
 
-  // Se necesita identificar por parte del profesor o administrador si está habilitado o no
+
   
 
   return (
