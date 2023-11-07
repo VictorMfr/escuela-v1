@@ -66,7 +66,7 @@ const Rasgos = () => {
     const checkIfData = async () => {
       const dataRequest = await getStudentPersonalTraits(id);
 
-      if (!dataRequest || dataRequest.datosRasgos.rasgos != {}) {
+      if (!dataRequest || dataRequest.datosRasgos.rasgos == {}) {
         Swal.fire("Atención", "No hay datos cargados, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
       }
     }
