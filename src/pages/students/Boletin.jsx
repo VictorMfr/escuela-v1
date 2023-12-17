@@ -99,7 +99,7 @@ const Boletin = () => {
             <View style={styles.section}>
               <Text style={styles.bodyText}>Nombre del Estudiante: {data.nombres} {data.apellidos}</Text>
               <Text style={styles.bodyText}>Grado y Sección: {data.grado} {data.seccion.toUpperCase()}</Text>
-              <Text style={styles.bodyText}>Fecha de Emisión: {new Date().getDay()}/{new Date().getDate()}/{new Date().getFullYear()}</Text>
+              <Text style={styles.bodyText}>Fecha de Emisión: {new Date().getDate()}/{new Date().getMonth() + 1}/{new Date().getFullYear()}</Text>
               <Text style={styles.bodyText}>Literal Calificativo Final: {data.literal_calificativo_final}</Text>
             </View>
 

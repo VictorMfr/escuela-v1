@@ -74,9 +74,11 @@ const Constancia = () => {
     checkIfData()
   }, []);
 
+  
 
   const data = studentDynamicReport ? studentDynamicReport.datosConstancia : "";
 
+  
   return (
     <PDFViewer style={{ width: "99%", height: "99vh" }}>
       {data && data.grado && (
@@ -119,7 +121,7 @@ const Constancia = () => {
                 Firma del Director
               </Text>
               <Text style={{ ...styles.bodyText, marginTop: 40, marginBottom: 30 }}>
-                Fecha de Emisión: {new Date().getDay()}/{new Date().getDate()}/{new Date().getFullYear()}
+                Fecha de Emisión: {new Date().getDate()}/{new Date().getMonth() + 1}/{new Date().getFullYear()}
               </Text>
             </View>
           </Page>

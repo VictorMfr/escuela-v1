@@ -123,13 +123,13 @@ const Rasgos = () => {
             <View style={{ ...styles.body, marginBottom: 20 }}>
               <Text style={{ ...styles.bodyText, marginTop: 20 }}>ASPECTOS POSITIVOS:</Text>
               <Text style={{ ...styles.bodyText, marginBottom: 20 }}>El estudiante presenta una serie de rasgos personales positivos que merecen ser destacados. Entre ellos, se incluyen:</Text>
-              {rasgosPositivos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}._ {rasgo}</Text>)}
+              {rasgosPositivos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}. {rasgo}</Text>)}
             </View>
 
             <View style={{ ...styles.body, marginBottom: 20 }}>
               <Text style={styles.bodyText}>ÁREAS DE MEJORA:</Text>
               <Text style={{ ...styles.bodyText, marginBottom: 20 }}>A pesar de los rasgos positivos, el estudiante también presenta áreas de mejora en su desarrollo personal. Estas áreas incluyen:</Text>
-              {rasgosNegativos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}._ {rasgo}</Text>)}
+              {rasgosNegativos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}. {rasgo}</Text>)}
             </View>
 
             <View style={styles.body}>
@@ -145,7 +145,7 @@ const Rasgos = () => {
             <View style={{ ...styles.body, marginTop: 20 }}>
               <Text style={styles.bodyText}>Firma del Docente: ________________________________</Text>
               <Text style={styles.bodyText}>Nombre del Docente: {data.docente}</Text>
-              <Text style={styles.bodyText}>Fecha: {new Date().getDay()}/{new Date().getDate()}/{new Date().getFullYear()}</Text>
+              <Text style={styles.bodyText}>Fecha: {new Date().getDate()}/{new Date().getMonth() + 1}/{new Date().getFullYear()}</Text>
             </View>
           </Page>
         </Document>

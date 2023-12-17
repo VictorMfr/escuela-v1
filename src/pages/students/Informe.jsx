@@ -109,7 +109,7 @@ const Informe = () => {
             <View style={styles.section}>
               <Text style={styles.bodyText}>Nombre del Estudiante: {data.nombres} {data.apellidos}</Text>
               <Text style={styles.bodyText}>Grado y Sección: {data.grado} {data.seccion.toUpperCase()}</Text>
-              <Text style={styles.bodyText}>Fecha de Emisión: {new Date().getDay()}/{new Date().getDate()}/{new Date().getFullYear()}</Text>
+              <Text style={styles.bodyText}>Fecha de Emisión: {new Date().getDate()}/{new Date().getMonth() + 1}/{new Date().getFullYear()}</Text>
               <Text style={styles.bodyText}>Docente de Grado: {data.docente}</Text>
               <Text style={styles.bodyText}>Director: {data.director}</Text>
             </View>

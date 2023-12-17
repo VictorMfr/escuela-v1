@@ -350,6 +350,8 @@ const Students = () => {
     }
   }, []);
 
+  console.log(students)
+
   return (
     <div className="list">
       <Sidebar />
