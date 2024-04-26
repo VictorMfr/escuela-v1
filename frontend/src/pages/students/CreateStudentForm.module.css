@@ -1,0 +1,60 @@
+.screen {
+    display: flex;
+}
+
+.container {
+    flex: 1;
+}
+
+.top {
+    text-align: center;
+    padding: 3rem;
+}
+
+.backlink {
+    text-decoration: none;
+    color: gray;
+}
+
+.backlink:hover {
+    text-decoration: underline;
+}
+
+.representantAddStudentForm {
+    width: 474px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 20px;
+    flex-grow: 1;
+    border: 1px solid gray;
+    border-radius: 8px;
+}
+
+.representantAddStudentFormDisplay {
+    display: flex;
+    gap: 0 15px;
+}
+
+.representantAddStudentForm label {
+    font-size: 15px;
+}
+
+.representantAddStudentForm input {
+    margin-bottom: 21px;
+    box-sizing: border-box;
+    padding: 8px;
+    width: 100%;
+}
+
+.saveButton button {
+    width: 100%;
+    background-color: rebeccapurple;
+    border: none;
+    color: white;
+    padding: 10px;
+}
+
+.saveButton button:hover {
+    cursor: pointer;
+    background-color: #6d1b6f;
+}

@@ -1,0 +1,105 @@
+.widget {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+
+  flex: 1;
+  border: 1px solid rgb(226, 226, 226);
+  min-height: 72px;
+  max-width: 168px;
+  padding: 13px 8px;
+
+  .left,
+  .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+    
+
+    .title {
+      font-weight: bold;
+      font-size: 14px;
+      color: rgb(160, 160, 160);
+      margin-bottom: 8px;
+    }
+
+    .counter {
+      font-size: 21px;
+      font-weight: 300;
+      margin-bottom: 8px;
+    }
+
+    .link {
+        min-width: 120px;
+        font-size: 12px;
+        padding: 10px;
+        border: none;
+        outline: none;
+        border: none;
+        background-color: rebeccapurple;
+        color: white;
+        cursor: pointer;
+  
+        &:hover {
+          background-color: #6d1b6f;
+        }
+
+    }
+
+    .percentage {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+
+      &.positive {
+        color: green;
+      }
+
+      &.negative {
+        color: red;
+      }
+    }
+
+    .icon {
+      font-size: 18px;
+      padding: 5px;
+      border-radius: 5px;
+      align-self: flex-end;
+    }
+  }
+}
+
+.periodDetails {
+  list-style: none;
+  margin-top: 1rem;
+  padding: 0;
+  text-align: start;
+
+  li {
+    margin: 5px 0;
+  }
+
+  li small {
+    margin-right: 3px;
+  }
+}
+
+.link {
+  min-width: 120px;
+  font-size: 12px;
+  padding: 10px;
+  border: none;
+  outline: none;
+  border: none;
+  background-color: rebeccapurple;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: #6d1b6f;
+  }
+
+}
