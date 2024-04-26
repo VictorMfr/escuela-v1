@@ -1,7 +1,7 @@
 {
   "name": "escuela",
   "version": "0.1.0",
-  "proxy": "https://school-rest-api-nu.vercel.app",
+  "proxy": "https://vercel.com/victormfrs-projects/school-rest-api/DyNrPBrpm5BpG7HHoEzaCn9DjkfG",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.11.1",
