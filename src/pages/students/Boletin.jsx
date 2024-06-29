@@ -87,7 +87,7 @@ const Boletin = () => {
 
               <Text>República Bolivariana de Venezuela</Text>
               <Text>Ministerio del Poder Popular para la Educación</Text>
-              <Text>Inst. República del Urugay</Text>
+              <Text>E.B. Manuel Piar</Text>
             </View>
 
             <View style={{ marginBottom: 40 }}>
