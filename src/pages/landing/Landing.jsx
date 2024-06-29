@@ -18,7 +18,7 @@ const LandingPage = () => {
           <br />
         </main>
         <footer className="footer">
-          <p>&copy; {new Date().getFullYear()} /Nombre escuela/. Todos los derechos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Escuela Básica Manuel Piar. Todos los derechos reservados.</p>
         </footer>
       </div>
     </div>
