@@ -50,12 +50,13 @@ const PersonalTraits = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
         deletePersonalTrait(id);
         Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
+          'Borrado',
+          'El registro ha sido borrado.',
           'success'
         );
       }

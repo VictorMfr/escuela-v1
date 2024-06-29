@@ -69,12 +69,13 @@ const Users = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Confirmar',
+      cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
         deleteUser(id)
         Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
+          'Borrado',
+          'El administrador ha sido borrado.',
           'success'
         )
       }

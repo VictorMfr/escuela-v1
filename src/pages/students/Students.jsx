@@ -174,7 +174,7 @@ const Students = () => {
 
   const _calificativoFinal = async (student) => {
     const { value: data } = await Swal.fire({
-      title: "Cargar Informe Descriptivo",
+      title: "Cargar Calificativo Final",
       html: `<label class="bold">Estudiante: </label><span>${student.nombres} ${student.apellidos}</span><hr>
       <br/>
       <select name="qualification" style="padding: 8px" id="qualification">
@@ -187,6 +187,7 @@ const Students = () => {
 `,
       showCancelButton: true,
       confirmButtonText: "Procesar",
+      cancelButtonText: "Cancelar",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         return {
@@ -210,6 +211,7 @@ const Students = () => {
       <textarea id="description" class="swal2-textarea" placeholder="Añade una descripción informativa del estudiante" cols="27">`,
       showCancelButton: true,
       confirmButtonText: "Procesar",
+      cancelButtonText: "Cancelar",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         return {
@@ -249,6 +251,7 @@ const Students = () => {
       html: htmlString,
       showCancelButton: true,
       confirmButtonText: "Procesar",
+      cancelButtonText: "Cancelar",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         const rasgos = {};
@@ -272,6 +275,7 @@ const Students = () => {
       inputValue: current,
       showCancelButton: true,
       confirmButtonText: "Actualizar",
+      cancelButtonText: "Cancelar",
       showLoaderOnConfirm: true,
 
       html: `
@@ -305,6 +309,7 @@ const Students = () => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: "Confirmar",
+      cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         removeSection(id_rep, id_est);

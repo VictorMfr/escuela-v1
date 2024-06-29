@@ -64,12 +64,13 @@ const ShowRepresentant = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Confirmar',
+      cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
         // deleteRepresentant(id)
         Swal.fire(
-          'Deleted!',
-          'Your file has been deleted.',
+          'Borrado',
+          'El representante ha sido borrado.',
           'success'
         )
       }

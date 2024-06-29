@@ -62,7 +62,7 @@ const Register = () => {
   const onSubmit = async (values) => {
     if (passwordError) {
       return Swal.fire({
-        title: 'Hello!',
+        title: 'Error!',
         text: `${passwordError}`,
         icon: 'error',
       });
@@ -70,7 +70,7 @@ const Register = () => {
 
     if (password !== confirmPassword) {
       return Swal.fire({
-        title: 'Hello!',
+        title: 'Error!',
         text: 'Las contraseñas no coinciden',
         icon: 'error',
       });
@@ -91,7 +91,7 @@ const Register = () => {
     }
 
     Swal.fire({
-      title: 'Hello!',
+      title: 'Error!',
       text: `${res.response.data.error ? res.response.data.error : res.message}`,
       icon: 'error',
     });

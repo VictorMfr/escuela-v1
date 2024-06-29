@@ -47,6 +47,7 @@ const Home = () => {
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Procesar",
+      cancelButtonText: 'Cancelar',
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         return {

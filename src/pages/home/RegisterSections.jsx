@@ -57,7 +57,8 @@ const RegisterSections = () => {
         text: "Confirme realizar el proceso.",
         icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'Procesar'
+        confirmButtonText: 'Procesar',
+        cancelButtonText: 'Cancelar',
       }).then(async (result) => {
         if (result.isConfirmed) {
           const resp = await addSections(secciones);

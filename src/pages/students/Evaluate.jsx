@@ -112,6 +112,7 @@ const Evaluate = () => {
       confirmButtonText: "Procesar",
       showLoaderOnConfirm: true,
       allowOutsideClick: false,
+      cancelButtonText: "Cancelar",
       preConfirm: () => {
         return {
           lapso: document.getElementById("swal-input").value,

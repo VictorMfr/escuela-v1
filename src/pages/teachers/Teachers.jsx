@@ -110,6 +110,7 @@ const Teachers = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Confirmar',
+      cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
         deleteTeacher(id, id_class)
@@ -146,6 +147,7 @@ const Teachers = () => {
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: "Procesar",
+      cancelButtonText: "Cancelar",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
         return {
@@ -172,6 +174,7 @@ const Teachers = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Confirmar',
+      cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         const resp = await removeClass(id, id_class)
