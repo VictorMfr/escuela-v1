@@ -12,7 +12,7 @@ const Personal = () => {
   const tableCols = [
     { field: 'id', headerName: 'ID', width: 70 },
     { field: 'nombre', headerName: 'Nombre y Apellido', width: 120 },
-    { field: 'email', headerName: 'Email', width: 150 }
+    { field: 'email', headerName: 'Correo', width: 150 }
   ];
 
   useEffect(() => {

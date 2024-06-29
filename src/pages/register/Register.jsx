@@ -91,7 +91,7 @@ const Register = () => {
     }
 
     Swal.fire({
-      title: 'Error!',
+      title: 'Error',
       text: `${res.response.data.error ? res.response.data.error : res.message}`,
       icon: 'error',
     });
@@ -105,11 +105,11 @@ const Register = () => {
         <h1>Registrar Director</h1>
         <input type="text" placeholder='Usuario' {...register("username", { required: true })} value={username} onChange={changeUsernameHandler} />
         {errs.username && (
-          <p className='text-error'>Username is required</p>
+          <p className='text-error'>Nombre de usuario es requerido</p>
         )}
-        <input type="email" placeholder='Email' {...register("email", { required: true })} value={email} onChange={changeEmailHandler} />
+        <input type="email" placeholder='Correo' {...register("email", { required: true })} value={email} onChange={changeEmailHandler} />
         {errs.email && (
-          <p className='text-error'>Email is required</p>
+          <p className='text-error'>Correo es requerido</p>
         )}
         <div className="password-input" style={{ display: "flex", alignItems: "center" }}>
           <input type={showPassword ? "text" : "password"} placeholder='Contraseña' {...register("password", { required: true })} value={password} onChange={changePasswordHandler} />
@@ -118,7 +118,7 @@ const Register = () => {
           </button>
         </div>
         {errs.password && (
-          <p className='text-error'>Password is required</p>
+          <p className='text-error'>Contraseña es requerida</p>
         )}
         {passwordError && (
           <p className='text-error'>{passwordError}</p>

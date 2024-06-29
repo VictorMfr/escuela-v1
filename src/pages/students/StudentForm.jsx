@@ -45,14 +45,14 @@ const CreateStudent = () => {
       if (res === true) {
         navigate('/students')
       } else {
-        Swal.fire("Error!", res, 'error')
+        Swal.fire("Error", res, 'error')
       }
     } else {
       const res = await createStudent(id_rep, data)
       if (res === true) {
         navigate('/representants')
       } else {
-        Swal.fire("Error!", res, 'error')
+        Swal.fire("Error", res, 'error')
       }
     }
   })

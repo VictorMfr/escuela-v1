@@ -80,7 +80,7 @@ const ShowRepresentant = () => {
   const loadData = async (id_representant) => {
     // const resp = await getStudentsByRepresentant(id_representant)
     const resp = await getRepresentant(id_representant);
-    if(resp.error) Swal.fire("Error!", resp.error, 'error').then(() => window.history.back());
+    if(resp.error) Swal.fire("Error", resp.error, 'error').then(() => window.history.back());
   }
 
   useEffect(() => {

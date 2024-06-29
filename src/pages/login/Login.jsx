@@ -38,7 +38,7 @@ const Login = () => {
     }
 
     if (!formData.email) {
-      validationErrors.email = "Email es requerido.";
+      validationErrors.email = "Correo es requerido.";
     }
 
     if (!formData.password) {
@@ -115,7 +115,7 @@ const Login = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Email"
+              placeholder="Correo"
             />
             {errors.email && (
               <span className="text-error">{errors.email}</span>

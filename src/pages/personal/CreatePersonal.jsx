@@ -29,7 +29,7 @@ const CreatePersonal = () => {
                 <input type="text" {...register("nombre")} placeholder='...' autoFocus required />
               </div>
               <div className="formInput">
-                <label htmlFor="nombre">Email</label>
+                <label htmlFor="nombre">Correo</label>
                 <input type="email" {...register("email")} placeholder="..." required />
               </div>
               <button>Guardar</button>
