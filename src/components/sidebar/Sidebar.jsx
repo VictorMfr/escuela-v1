@@ -1,6 +1,7 @@
 import "./sidebar.scss"
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
+import Add from '@mui/icons-material/Add';
 import SchoolIcon from '@mui/icons-material/School';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import SpeedOutlinedIcon from '@mui/icons-material/SpeedOutlined';
@@ -87,18 +88,23 @@ const Sidebar = () => {
                   )
                 }
 
-                {/* <Link to="/personal" style={{ textDecoration: "none" }}>
-                  <li>
-                    <FolderSharedIcon className="icon" />
-                    <span>Personal Administrativo</span>
-                  </li>
-                </Link> */}
                 <Link to="/teachers" style={{ textDecoration: "none" }}>
                   <li>
                     <AssignmentIndIcon className="icon" />
                     <span>Docentes</span>
                   </li>
                 </Link>
+
+                {
+                  (userType === "director") && (
+                    <Link to="/personalTraits" style={{ textDecoration: "none" }}>
+                      <li>
+                        <Add className="icon" />
+                        <span>Rasgos Personales</span>
+                      </li>
+                    </Link>
+                  )
+                }
               </>
             )
           }

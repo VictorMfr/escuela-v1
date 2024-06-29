@@ -88,13 +88,13 @@ const Constancia = () => {
               <Image src={logo} style={styles.logo} />
               <Text>República Bolivariana de Venezuela</Text>
               <Text>Ministerio del Poder Popular para la Educación</Text>
-              <Text>E.B. República del Uruguay</Text>
+              <Text>E.B. Manuel Piar</Text>
               <Text style={styles.heading}>CONSTANCIA DE ESTUDIOS</Text>
             </View>
 
             <View style={styles.section}>
               <Text style={styles.bodyText}>
-                La Institución E.B. República del Uruguay, por medio de la presente, certificamos que el/la estudiante {data.nombres} {data.apellidos}, de cédula escolar {data.cedula_escolar}. Está actualmente inscrito/a y cursando el año académico {data.periodoEscolar} en nuestro plantel educativo.
+                La Institución E.B. Manuel Piar, por medio de la presente, certificamos que el/la estudiante {data.nombres} {data.apellidos}, de cédula escolar {data.cedula_escolar}. Está actualmente inscrito/a y cursando el año académico {data.periodoEscolar} en nuestro plantel educativo.
               </Text>
             </View>
 

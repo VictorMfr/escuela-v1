@@ -20,26 +20,23 @@
     text-decoration: underline;
 }
 
-.representantAddStudentForm {
-    width: 474px;
+.personalTraitForm {
+    width: 336px;
     margin: 0 auto;
     box-sizing: border-box;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
     border: 1px solid gray;
     border-radius: 8px;
 }
 
-.representantAddStudentFormDisplay {
-    display: flex;
-    gap: 0 15px;
-}
-
-.representantAddStudentForm label {
+.personalTraitForm label {
     font-size: 15px;
 }
 
-.representantAddStudentForm input {
+.personalTraitForm input {
     margin-bottom: 21px;
     box-sizing: border-box;
     padding: 8px;

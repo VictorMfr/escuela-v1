@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
 import React from "react"
+import { usePersonalTraits } from "../../context/PersonalTraitsContext";
 
 const Students = () => {
   const { userType } = useAuth();
@@ -30,6 +31,8 @@ const Students = () => {
     calificativoFinal
   } = useStudents();
 
+  const { personalTraits, getPersonalTraits } = usePersonalTraits();
+
   const isStaticTable = (students[0] && students[0].static)
 
   let tableCols = [
@@ -42,7 +45,7 @@ const Students = () => {
 
   if (!isStaticTable) {
     tableCols = tableCols.concat({ field: "grado", headerName: "Grado", width: 100 },
-    { field: "seccion", headerName: "Sección", width: 100 })
+      { field: "seccion", headerName: "Sección", width: 100 })
   }
 
   const actionColumn = [
@@ -228,60 +231,31 @@ const Students = () => {
     <label for="${idRasgo}_verdadero"></label>
     <input style="align-text: start" type="checkbox" id="${idRasgo}_verdadero" value="false" name="${NombreRasgo ? NombreRasgo.toLowerCase() : ""}" onclick="this.value = this.checked ? true : false">
     </div>
-
     `
   }
 
   const _rasgosPersonales = async (student) => {
+    let htmlString = `<label class="bold">Estudiante: </label><span>${student.nombres} ${student.apellidos}</span>
+      <hr><br/>`;
+
+    personalTraits.forEach(trait => {
+      htmlString += rasgo(trait.name, trait.name.toLowerCase());
+    });
+
+    htmlString += `<br/><hr/>`;
+
     const { value: data } = await Swal.fire({
       title: "Cargar Rasgos Personales",
-      html: `<label class="bold">Estudiante: </label><span>${student.nombres} ${student.apellidos}</span>
-      <hr>
-      <br/>
-
-      ${rasgo("Motivación", "motivacion")}
-      ${rasgo("Responsabilidad", "responsabilidad")}
-      ${rasgo("Organizacion", "organizacion")}
-      ${rasgo("Disciplina", "disciplina")}
-      ${rasgo("Empatia", "empatia")}
-      ${rasgo("Adaptabilidad", "adaptabilidad")}
-      ${rasgo("Creatividad", "creatividad")}
-      ${rasgo("Trabajo en Equipo", "trabajo_en_equipo")}
-      ${rasgo("Honestidad", "honestidad")}
-      ${rasgo("Autodirección", "autodireccion")}
-      ${rasgo("Resiliencia", "resiliencia")}
-      ${rasgo("Paciencia", "paciencia")}
-      ${rasgo("Pensamiento Crítico", "pensamiento_critico")}
-      ${rasgo("Tolerancia a la Frustración", "tolerancia_frustracion")}
-      ${rasgo("Ambición", "ambicion")}
-      <br/>
-      <hr/>
-      `
-      ,
+      html: htmlString,
       showCancelButton: true,
       confirmButtonText: "Procesar",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
-        const rasgos = {
-          motivacion: document.getElementById("motivacion_verdadero").value,
-          responsabilidad: document.getElementById("responsabilidad_verdadero").value,
-          organizacion: document.getElementById("organizacion_verdadero").value,
-          disciplina: document.getElementById("disciplina_verdadero").value,
-          empatia: document.getElementById("empatia_verdadero").value,
-          adaptabilidad: document.getElementById("adaptabilidad_verdadero").value,
-          creatividad: document.getElementById("creatividad_verdadero").value,
-          trabajo_en_equipo: document.getElementById("trabajo_en_equipo_verdadero").value,
-          honestidad: document.getElementById("honestidad_verdadero").value,
-          autodireccion: document.getElementById("autodireccion_verdadero").value,
-          resiliencia: document.getElementById("resiliencia_verdadero").value,
-          paciencia: document.getElementById("paciencia_verdadero").value,
-          pensamiento_critico: document.getElementById("pensamiento_critico_verdadero").value,
-          tolerancia_frustracion: document.getElementById("tolerancia_frustracion_verdadero").value,
-          ambicion: document.getElementById("ambicion_verdadero").value,
-        }
-        return {
-          rasgos
-        };
+        const rasgos = {};
+        personalTraits.forEach(trait => {
+          rasgos[trait.name.toLowerCase()] = document.getElementById(`${trait.name.toLowerCase()}_verdadero`).value;
+        });
+        return { rasgos };
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
@@ -314,12 +288,11 @@ const Students = () => {
 
       preConfirm: async () => {
         const data = document.getElementById("seccion").value;
-        console.log("hey")
         return await assignSection(id_rep, id_est, data);
       },
-      
+
     }).then(() => {
-        Swal.fire("Exito", "Se ha movido de sección exitosamente", "success").then(() => Swal.close());
+      Swal.fire("Exito", "Se ha movido de sección exitosamente", "success").then(() => Swal.close());
     });
   };
 
@@ -334,7 +307,7 @@ const Students = () => {
       confirmButtonText: "Confirmar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        removeSection(id_rep, id_est); 
+        removeSection(id_rep, id_est);
         Swal.fire("Exito", "Se ha removido de sección exitosamente", "success").then(() => Swal.close());
       }
     });
@@ -348,9 +321,9 @@ const Students = () => {
     } else {
       getStudents();
     }
-  }, []);
 
-  console.log(students)
+    getPersonalTraits();
+  }, []);
 
   return (
     <div className="list">

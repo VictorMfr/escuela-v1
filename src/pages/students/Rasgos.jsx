@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   subtitle: {
     textAlign: "center",
     marginBottom: 20,
-    fontSize: 14
+    fontSize: 14,
   },
   logo: {
     width: 100,
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     textDecoration: "underline",
     textAlign: "center",
     marginTop: 30,
-    marginBottom: 30
+    marginBottom: 30,
   },
   bodyText: {
     fontSize: 12,
@@ -59,41 +59,52 @@ const styles = StyleSheet.create({
 
 const Rasgos = () => {
   const { studentDynamicReport, getStudentPersonalTraits } = useStudents();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
     const checkIfData = async () => {
       const dataRequest = await getStudentPersonalTraits(id);
 
-      if (!dataRequest || dataRequest.datosRasgos.rasgos == {}) {
-        Swal.fire("Atención", "No hay datos cargados, espera a que el docente lo cargue", "warning").then(() => navigate(-1))
+      if (!dataRequest || !dataRequest.datosRasgos || !dataRequest.datosRasgos.rasgos) {
+        Swal.fire("Atención", "No hay datos cargados, espera a que el docente lo cargue", "warning").then(() => navigate(-1));
       }
-    }
+    };
 
-    checkIfData()
-  }, []);
+    checkIfData();
+  }, [getStudentPersonalTraits, id, navigate]);
 
   const data = studentDynamicReport ? studentDynamicReport.datosRasgos : "";
 
-  let rasgosPositivos = [];
-  let rasgosNegativos = [];
+  const transformStringBooleans = (obj) => {
+    const transformedObj = {};
 
-
-  if (data && data.rasgos) {
-    Object.keys(data.rasgos).map(rasgo => {
-
-      if (data.rasgos[rasgo]) {
-        rasgo = rasgo.replace("_", " ")
-        rasgo = rasgo.replace("_", " ")
-        rasgosPositivos.push(rasgo)
+    for (let key in obj) {
+      if (obj[key] === "true") {
+        transformedObj[key] = true;
+      } else if (obj[key] === "false") {
+        transformedObj[key] = false;
       } else {
-        rasgo = rasgo.replace("_", " ")
-        rasgo = rasgo.replace("_", " ")
-        rasgosNegativos.push(rasgo)
+        transformedObj[key] = obj[key];
       }
-    })
-  }
+    }
+
+    return transformedObj;
+  };
+
+  const rasgos = data && data.rasgos ? transformStringBooleans(data.rasgos) : {};
+
+  const rasgosPositivos = [];
+  const rasgosNegativos = [];
+
+  Object.keys(rasgos).forEach((rasgo) => {
+    const displayRasgo = rasgo.replace(/_/g, " ");
+    if (rasgos[rasgo]) {
+      rasgosPositivos.push(displayRasgo);
+    } else {
+      rasgosNegativos.push(displayRasgo);
+    }
+  });
 
   return (
     <PDFViewer style={{ width: "99%", height: "98vh" }}>
@@ -104,13 +115,13 @@ const Rasgos = () => {
               <Image src={logo} style={styles.logo} />
               <Text>República Bolivariana de Venezuela</Text>
               <Text>Ministerio del Poder Popular para la Educación</Text>
-              <Text>E.B. República del Uruguay</Text>
+              <Text>E.B. Manuel Piar</Text>
               <Text style={styles.heading}>INFORME DE RASGOS PERSONALES</Text>
             </View>
 
             <View style={styles.body}>
               <Text style={styles.bodyText}>Nombre del Estudiante: {data.nombres} {data.apellidos}</Text>
-              <Text style={styles.bodyText}>Fecha del Informe: {new Date().getDay()}/{new Date().getDate()}/{new Date().getFullYear()}</Text>
+              <Text style={styles.bodyText}>Fecha del Informe: {new Date().toLocaleDateString()}</Text>
             </View>
 
             <View style={{ ...styles.body, marginTop: 30 }}>
@@ -123,13 +134,17 @@ const Rasgos = () => {
             <View style={{ ...styles.body, marginBottom: 20 }}>
               <Text style={{ ...styles.bodyText, marginTop: 20 }}>ASPECTOS POSITIVOS:</Text>
               <Text style={{ ...styles.bodyText, marginBottom: 20 }}>El estudiante presenta una serie de rasgos personales positivos que merecen ser destacados. Entre ellos, se incluyen:</Text>
-              {rasgosPositivos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}. {rasgo}</Text>)}
+              {rasgosPositivos.map((rasgo, index) => (
+                <Text key={index} style={styles.bodyText}>{index + 1}. {rasgo}</Text>
+              ))}
             </View>
 
             <View style={{ ...styles.body, marginBottom: 20 }}>
               <Text style={styles.bodyText}>ÁREAS DE MEJORA:</Text>
               <Text style={{ ...styles.bodyText, marginBottom: 20 }}>A pesar de los rasgos positivos, el estudiante también presenta áreas de mejora en su desarrollo personal. Estas áreas incluyen:</Text>
-              {rasgosNegativos.map((rasgo, index) => <Text style={styles.bodyText}>{" "} {" "} {" "}{index + 1}. {rasgo}</Text>)}
+              {rasgosNegativos.map((rasgo, index) => (
+                <Text key={index} style={styles.bodyText}>{index + 1}. {rasgo}</Text>
+              ))}
             </View>
 
             <View style={styles.body}>
@@ -145,7 +160,7 @@ const Rasgos = () => {
             <View style={{ ...styles.body, marginTop: 20 }}>
               <Text style={styles.bodyText}>Firma del Docente: ________________________________</Text>
               <Text style={styles.bodyText}>Nombre del Docente: {data.docente}</Text>
-              <Text style={styles.bodyText}>Fecha: {new Date().getDate()}/{new Date().getMonth() + 1}/{new Date().getFullYear()}</Text>
+              <Text style={styles.bodyText}>Fecha: {new Date().toLocaleDateString()}</Text>
             </View>
           </Page>
         </Document>

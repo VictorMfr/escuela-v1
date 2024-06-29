@@ -8,6 +8,7 @@ import { StudentProvider } from "./context/StudentsContext";
 import { RepresentantProvider } from "./context/RepresentantsContext";
 import { DirectorsProvider } from "./context/DirectorContext";
 import { PeriodProvider } from "./context/PeriodContext";
+import { PersonalTraitsProvider } from "./context/PersonalTraitsContext";
 
 import Boletin from "./pages/students/Boletin"
 import Informe from "./pages/students/Informe"
@@ -36,6 +37,8 @@ const LazyStudentForm = React.lazy(() => import("./pages/students/StudentForm"))
 const LazyEvaluate = React.lazy(() => import("./pages/students/Evaluate"));
 const LazyViewUser = React.lazy(() => import("./pages/users/ViewUser"));
 const LazyViewTeacher = React.lazy(() => import("./pages/teachers/ViewTeacher"));
+const LazyPersonalTraits = React.lazy(() => import("./pages/personalTraits/PersonalTraits"));
+const LazyCreatePersonalTrait = React.lazy(() => import("./pages/personalTraits/CreatePersonalTrait"));
 
 
 function App() {
@@ -44,67 +47,76 @@ function App() {
       <PeriodProvider>
         <UserProvider>
           <DirectorsProvider>
-            <TeacherProvider>
-              <StudentProvider>
-                <RepresentantProvider>
-                  <BrowserRouter>
-                    <Suspense fallback={<LoadingModal show={true} />}>
-                      <Routes>
-                        <Route path="/home" element={<LazyLandingPage />} />
-                        <Route path="/login" element={<LazyLogin />} />
-                        <Route path="/register" element={<LazyRegister />} />
-                        <Route path="/grades/register" element={<LazyRegisterGrades />} />
-                        <Route path="/sections/register" element={<LazyRegisterSections />} />
-                        <Route path="/students/register" element={<LazyRegisterStudents />} />
+            <PersonalTraitsProvider>
+              <TeacherProvider>
+                <StudentProvider>
+                  <RepresentantProvider>
+                    <BrowserRouter>
+                      <Suspense fallback={<LoadingModal show={true} />}>
+                        <Routes>
+                          <Route path="/home" element={<LazyLandingPage />} />
+                          <Route path="/login" element={<LazyLogin />} />
+                          <Route path="/register" element={<LazyRegister />} />
+                          <Route path="/grades/register" element={<LazyRegisterGrades />} />
+                          <Route path="/sections/register" element={<LazyRegisterSections />} />
+                          <Route path="/students/register" element={<LazyRegisterStudents />} />
 
-                        <Route path="/" element={<ProtectedRoute />}>
-                          <Route index element={<LazyHome />} />
+                          <Route path="/" element={<ProtectedRoute />}>
+                            <Route index element={<LazyHome />} />
 
-                          <Route path="personal">
-                            <Route index element={<LazyPersonal />} />
-                            <Route path="create" element={<LazyCreatePersonal />} />
+                            <Route path="personal">
+                              <Route index element={<LazyPersonal />} />
+                              <Route path="create" element={<LazyCreatePersonal />} />
+                            </Route>
+
+                            <Route path="representants">
+                              <Route index element={<LazyRepresentant />} />
+                              <Route path="create" element={<RepresentantsForm title="Nuevo Representante" />} />
+                              <Route path="edit/:id" element={<RepresentantsForm title="Modificar Representante" />} />
+                              <Route path=":id_rep/add-student" element={<LazyStudentForm />} />
+                            </Route>
+
+                            <Route path="students">
+                              <Route index element={<LazyStudents />} />
+                              <Route path="evaluate" element={<LazyEvaluate />} />
+
+                              <Route path=":id/boletin" element={<Boletin />} />
+                              <Route path=":id/informe" element={<Informe />} />
+                              <Route path=":id/constancia" element={<Constancia />} />
+                              <Route path=":id/rasgos" element={<Rasgos />} />
+
+                              <Route path="create" element={<LazyStudentForm />} />
+                              <Route path=":id_est/representants/:id_rep" element={<LazyStudentForm />} />
+
+                            </Route>
+
+                            <Route path="teachers">
+                              <Route index element={<LazyTeachers />} />
+                              <Route path=":id_teacher" element={<LazyViewTeacher />} />
+                              <Route path="create" element={<LazyCreateTeacher title="Nuevo Docente" />} />
+                            </Route>
+
+                            <Route path="users">
+                              <Route index element={<LazyUsers />} />
+                              <Route path="create" element={<LazyCreateUser title="Nuevo Administrador" />} />
+                              <Route path="edit/:id_user" element={<LazyEditUser title="Modificar Administrador" />} />
+                              <Route path=":id_user" element={<LazyViewUser />} />
+                            </Route>
+
+                            <Route path="personalTraits">
+                              <Route index element={<LazyPersonalTraits />} />
+                              <Route path="create" element={<LazyCreatePersonalTrait title="Nuevo Rasgo Personal" />} />
+                              <Route path="edit/:id_personalTrait" element={<LazyPersonalTraits title="Modificar Rasgo Personal" />} />
+                              <Route path=":id_personalTrait" element={<LazyPersonalTraits />} />
+                            </Route>
                           </Route>
-
-                          <Route path="representants">
-                            <Route index element={<LazyRepresentant />} />
-                            <Route path="create" element={<RepresentantsForm title="Nuevo Representante" />} />
-                            <Route path="edit/:id" element={<RepresentantsForm title="Modificar Representante" />} />
-                            <Route path=":id_rep/add-student" element={<LazyStudentForm />} />
-                          </Route>
-
-                          <Route path="students">
-                            <Route index element={<LazyStudents />} />
-                            <Route path="evaluate" element={<LazyEvaluate />} />
-
-                            <Route path=":id/boletin" element={<Boletin />} />
-                            <Route path=":id/informe" element={<Informe />} />
-                            <Route path=":id/constancia" element={<Constancia />} />
-                            <Route path=":id/rasgos" element={<Rasgos />} />
-
-                            <Route path="create" element={<LazyStudentForm />} />
-                            <Route path=":id_est/representants/:id_rep" element={<LazyStudentForm />} />
-
-                          </Route>
-
-                          <Route path="teachers">
-                            <Route index element={<LazyTeachers />} />
-                            <Route path=":id_teacher" element={<LazyViewTeacher />} />
-                            <Route path="create" element={<LazyCreateTeacher title="Nuevo Docente" />} />
-                          </Route>
-
-                          <Route path="users">
-                            <Route index element={<LazyUsers />} />
-                            <Route path="create" element={<LazyCreateUser title="Nuevo Administrador" />} />
-                            <Route path="edit/:id_user" element={<LazyEditUser title="Modificar Administrador" />} />
-                            <Route path=":id_user" element={<LazyViewUser />} />
-                          </Route>
-                        </Route>
-                      </Routes>
-                    </Suspense>
-                  </BrowserRouter>
-                </RepresentantProvider>
-              </StudentProvider>
-            </TeacherProvider>
+                        </Routes>
+                      </Suspense>
+                    </BrowserRouter>
+                  </RepresentantProvider>
+                </StudentProvider>
+              </TeacherProvider>
+            </PersonalTraitsProvider>
           </DirectorsProvider>
         </UserProvider>
       </PeriodProvider>

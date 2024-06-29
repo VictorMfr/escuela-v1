@@ -17,7 +17,10 @@ const DataTable = ({ title, createUrl, tableCols, tableRows, actionColumn, stude
       return td.nombres.toLowerCase().includes(searchTerm.toLowerCase()) ||
         td.apellidos.toLowerCase().includes(searchTerm.toLowerCase()) ||
         td.cedula_escolar.toLowerCase().includes(searchTerm.toLowerCase())
-    } 
+    } else if (td.name && td.description) {
+      return td.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        td.description.toLowerCase().includes(searchTerm.toLowerCase())
+    }
 
   });
 
