@@ -77,7 +77,7 @@ const PersonalTraits = () => {
       <div className="listContainer">
         <Navbar />
         <DataTable
-          title="Personal Traits"
+          title="Rasgos Personales"
           tableCols={tableCols}
           tableRows={personalTraits}
           actionColumn={actionColumn}
