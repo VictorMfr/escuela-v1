@@ -174,7 +174,7 @@ const Students = () => {
 
   const _calificativoFinal = async (student) => {
     const { value: data } = await Swal.fire({
-      title: "Cargar Informe Descriptivo",
+      title: "Cargar Calificativo Final",
       html: `<label class="bold">Estudiante: </label><span>${student.nombres} ${student.apellidos}</span><hr>
       <br/>
       <select name="qualification" style="padding: 8px" id="qualification">
